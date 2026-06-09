@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lotus Personalizados</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07040f;--deep:#2d1b69;--mid:#6b4fa0;--soft:#c4aae8;--acc:#b89fd4;--white:#faf8ff;--border:rgba(180,140,220,.13);--card:rgba(255,255,255,.03);--glow:rgba(180,140,220,.4)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(107,79,160,.2),transparent 55%),radial-gradient(ellipse at 80% 80%,rgba(45,27,105,.28),transparent 55%),linear-gradient(180deg,#07040f,#060318);z-index:-2;pointer-events:none}
+.stars{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) ease-in-out infinite var(--dl,0s);opacity:0}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.8)}50%{opacity:var(--b,.5);transform:scale(1.2)}}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.1rem 2.5rem;display:flex;justify-content:space-between;align-items:center;background:rgba(7,4,15,.8);backdrop-filter:blur(22px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;letter-spacing:.08em;color:var(--soft);text-shadow:0 0 20px var(--glow);text-decoration:none;display:flex;align-items:center;gap:.5rem}
+.nav-logo-img{width:34px;height:34px;border-radius:50%;object-fit:cover;display:none;border:1px solid rgba(180,140,220,.3)}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+.nav-links a{color:rgba(255,255,255,.55);text-decoration:none;font-size:.77rem;font-weight:300;letter-spacing:.14em;text-transform:uppercase;transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--soft);transition:width .35s}
+.nav-links a:hover{color:var(--soft)}.nav-links a:hover::after{width:100%}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:.3rem}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--soft);border-radius:2px}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem}
+.lotus-ring{width:170px;height:170px;border-radius:50%;border:1px solid rgba(180,140,220,.28);position:relative;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;animation:rp 4s ease-in-out infinite}
+.lotus-ring::before,.lotus-ring::after{content:'';position:absolute;border-radius:50%;border:1px solid rgba(180,140,220,.1);animation:rp 4s ease-in-out infinite reverse}
+.lotus-ring::before{inset:-14px}.lotus-ring::after{inset:-28px;border-color:rgba(180,140,220,.05)}
+@keyframes rp{0%,100%{box-shadow:0 0 22px var(--glow)}50%{box-shadow:0 0 65px var(--glow),0 0 110px rgba(107,79,160,.18)}}
+.hero-icon{font-size:3.8rem;filter:drop-shadow(0 0 18px var(--glow));animation:float 6s ease-in-out infinite}
+.hero-logo-img{width:100%;height:100%;border-radius:50%;object-fit:cover;position:absolute;inset:0}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:300;line-height:1.05;letter-spacing:.06em;margin-bottom:.3rem;background:linear-gradient(135deg,var(--white) 30%,var(--soft) 70%,var(--acc) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--acc);letter-spacing:.2em;margin-bottom:1.4rem;opacity:.85}
+.hero-desc{max-width:460px;font-size:.88rem;font-weight:300;color:rgba(255,255,255,.48);line-height:1.88;margin-bottom:2.5rem}
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.82rem 2.2rem;border-radius:50px;font-family:'Jost',sans-serif;font-size:.76rem;font-weight:400;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.17),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+.btn:hover::before{opacity:1}.btn:hover{transform:translateY(-3px) scale(1.03)}.btn:active{transform:translateY(0) scale(.98)}
+.btn-primary{background:linear-gradient(135deg,var(--mid),var(--deep));color:var(--white);box-shadow:0 4px 28px rgba(107,79,160,.48)}
+.btn-primary:hover{box-shadow:0 8px 48px rgba(107,79,160,.68)}
+.btn-outline{background:transparent;color:var(--soft);border:1px solid rgba(180,140,220,.38)}
+.btn-outline:hover{background:rgba(107,79,160,.15);border-color:var(--soft);color:var(--white)}
+.btn-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.section-label{font-size:.67rem;letter-spacing:.3em;text-transform:uppercase;color:var(--acc);margin-bottom:.5rem;display:block}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:300;line-height:1.15;background:linear-gradient(135deg,var(--white),var(--soft));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.85rem}
+.divider{width:55px;height:1px;background:linear-gradient(90deg,var(--soft),transparent);margin-bottom:2.8rem;box-shadow:0 0 10px var(--glow)}
+#contact-bar{background:rgba(255,255,255,.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:.9rem 2rem}
+#contact-bar .inner{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;align-items:center}
+.contact-item{display:flex;align-items:center;gap:.45rem;font-size:.77rem;color:rgba(255,255,255,.45)}
+.contact-item strong{color:var(--soft)}
+#produtos{padding:6rem 2rem;max-width:1120px;margin:0 auto}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.4rem}
+.product-card{border-radius:22px;overflow:hidden;background:var(--card);border:1px solid var(--border);transition:transform .4s,box-shadow .4s,border-color .4s;cursor:pointer}
+.product-card:hover{transform:translateY(-7px) scale(1.015);box-shadow:0 20px 58px rgba(107,79,160,.36),0 0 0 1px rgba(180,140,220,.3);border-color:rgba(180,140,220,.35)}
+.product-card:hover .card-img-inner{transform:scale(1.07)}.product-card:hover .card-shine{opacity:1}
+.card-img-wrap{height:255px;overflow:hidden;position:relative}
+.card-img-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform .6s;position:relative}
+.card-img-inner img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.card-emoji{font-size:5.5rem;z-index:1;position:relative}
+.card-shine{position:absolute;inset:0;background:linear-gradient(to top,rgba(45,27,105,.92),rgba(107,79,160,.3) 50%,transparent);opacity:0;transition:opacity .4s;z-index:2}
+.card-body{padding:1.2rem 1.5rem 1.5rem}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.35rem}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400;color:var(--white)}
+.card-price{font-size:.92rem;font-weight:500;color:var(--soft);white-space:nowrap;margin-left:.5rem}
+.card-desc{font-size:.8rem;color:rgba(255,255,255,.48);font-weight:300;line-height:1.65;margin-bottom:.85rem}
+.card-tag{display:inline-block;padding:.22rem .75rem;border-radius:50px;font-size:.64rem;letter-spacing:.15em;text-transform:uppercase;border:1px solid rgba(180,140,220,.28);color:var(--acc);background:rgba(107,79,160,.1)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(14px);z-index:900;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .35s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:linear-gradient(145deg,#19103a,#0d0720);border:1px solid rgba(180,140,220,.22);border-radius:26px;width:100%;max-width:670px;max-height:92vh;overflow-y:auto;position:relative;transform:translateY(32px) scale(.95);transition:transform .35s,opacity .35s;opacity:0;box-shadow:0 32px 110px rgba(45,27,105,.7)}
+.modal-overlay.open .modal-box{transform:translateY(0) scale(1);opacity:1}
+.modal-close{position:absolute;top:1.1rem;right:1.3rem;background:rgba(255,255,255,.08);border:1px solid var(--border);color:rgba(255,255,255,.6);font-size:1rem;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;z-index:10}
+.modal-close:hover{background:rgba(255,255,255,.15);color:var(--white)}
+.modal-main-img{width:100%;height:280px;overflow:hidden;border-radius:22px 22px 0 0;position:relative;display:flex;align-items:center;justify-content:center}
+.modal-main-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:opacity .3s}
+.modal-emoji{font-size:7rem;z-index:1;position:relative;filter:drop-shadow(0 0 24px var(--glow))}
+.modal-img-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,#0d0720 100%);z-index:2}
+.modal-gallery{display:none;flex;gap:.5rem;padding:.8rem 1.5rem 0;overflow-x:auto;scroll-behavior:smooth}
+.modal-gallery::-webkit-scrollbar{height:3px}.modal-gallery::-webkit-scrollbar-thumb{background:rgba(180,140,220,.3);border-radius:50px}
+.gallery-thumb{width:56px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;border:2px solid transparent;cursor:pointer;transition:all .25s;opacity:.5}
+.gallery-thumb.active{border-color:var(--soft);opacity:1;box-shadow:0 0 12px var(--glow)}.gallery-thumb:hover{opacity:.8}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover}
+.modal-content{padding:1.5rem 2rem 2.2rem}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:.3rem}
+.modal-price-tag{display:inline-block;padding:.32rem 1rem;border-radius:50px;background:linear-gradient(135deg,rgba(107,79,160,.33),rgba(45,27,105,.5));border:1px solid rgba(180,140,220,.28);color:var(--soft);font-size:.95rem;font-weight:500;margin-bottom:1.2rem;box-shadow:0 0 18px rgba(107,79,160,.28)}
+.modal-desc{font-size:.86rem;color:rgba(255,255,255,.58);line-height:1.85;margin-bottom:1.4rem;font-weight:300}
+.modal-details{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.6rem}
+.modal-detail{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem}
+.modal-detail-label{font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);margin-bottom:.25rem}
+.modal-detail-val{font-size:.84rem;color:rgba(255,255,255,.72)}
+.modal-cta{width:100%;padding:.95rem;font-size:.78rem;letter-spacing:.14em;border-radius:14px;justify-content:center}
+#feedbacks{padding:6rem 2rem;max-width:1120px;margin:0 auto}
+.feedbacks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.2rem}
+.feedback-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem 1.6rem;transition:transform .35s,border-color .35s,box-shadow .35s;position:relative;overflow:hidden}
+.feedback-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(180,140,220,.4),transparent)}
+.feedback-card:hover{transform:translateY(-5px);border-color:rgba(180,140,220,.28);box-shadow:0 12px 42px rgba(107,79,160,.2)}
+.feedback-stars{color:#e2c96e;font-size:.92rem;margin-bottom:.7rem}
+.feedback-text{font-size:.83rem;color:rgba(255,255,255,.58);font-weight:300;line-height:1.72;margin-bottom:1rem;font-style:italic}
+.feedback-author{font-size:.74rem;letter-spacing:.1em;color:var(--acc)}
+.feedback-date{font-size:.67rem;color:rgba(255,255,255,.22);margin-left:.5rem}
+#como-funciona{background:rgba(255,255,255,.013);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:6rem 2rem}
+.steps-wrap{max-width:1100px;margin:0 auto}
+.steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.4rem;margin-top:2.8rem}
+.step{padding:1.8rem;border-radius:20px;background:rgba(107,79,160,.06);border:1px solid var(--border);position:relative;overflow:hidden;transition:transform .35s,box-shadow .35s,border-color .35s}
+.step::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--soft),transparent);opacity:0;transition:opacity .35s}
+.step:hover{transform:translateY(-5px);border-color:rgba(180,140,220,.28);box-shadow:0 10px 38px rgba(107,79,160,.2)}.step:hover::before{opacity:1}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;background:linear-gradient(135deg,rgba(180,140,220,.55),rgba(107,79,160,.28));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.7rem}
+.step-title{font-size:.95rem;font-weight:500;color:var(--soft);margin-bottom:.55rem}
+.step-text{font-size:.82rem;font-weight:300;color:rgba(255,255,255,.5);line-height:1.8}
+.payment-badges{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.2rem}
+.badge{padding:.48rem 1.1rem;border-radius:50px;background:rgba(107,79,160,.13);border:1px solid rgba(180,140,220,.2);font-size:.74rem;letter-spacing:.1em;color:var(--soft);display:flex;align-items:center;gap:.4rem;transition:all .3s}
+.badge:hover{background:rgba(107,79,160,.26);border-color:var(--soft)}
+#contato{padding:6rem 2rem;text-align:center;position:relative}
+#contato::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:550px;height:360px;border-radius:50%;background:radial-gradient(ellipse,rgba(107,79,160,.15),transparent 70%);pointer-events:none}
+.cta-inner{position:relative;max-width:580px;margin:0 auto;padding:3.5rem 2.5rem;border-radius:28px;background:rgba(255,255,255,.022);border:1px solid rgba(180,140,220,.15);backdrop-filter:blur(10px)}
+footer{padding:2.5rem 2rem;text-align:center;border-top:1px solid var(--border);color:rgba(255,255,255,.2);font-size:.71rem;letter-spacing:.1em}
+footer span{color:var(--acc)}
+.pulse-line{display:block;width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--soft),var(--acc),transparent);opacity:.4;margin:0 auto;max-width:1100px}
+.fab{position:fixed;bottom:2rem;right:2rem;z-index:400;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#6b4fa0,#2d1b69);box-shadow:0 4px 28px rgba(107,79,160,.68);display:flex;align-items:center;justify-content:center;font-size:1.4rem;text-decoration:none;transition:transform .3s,box-shadow .3s;animation:fabp 2.5s ease-in-out infinite}
+.fab:hover{transform:scale(1.12);animation:none;box-shadow:0 8px 45px rgba(107,79,160,.88)}
+@keyframes fabp{0%,100%{box-shadow:0 4px 28px rgba(107,79,160,.68)}50%{box-shadow:0 4px 48px rgba(107,79,160,.9),0 0 0 8px rgba(107,79,160,.13)}}
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:rgba(255,255,255,.02)}::-webkit-scrollbar-thumb{background:rgba(180,140,220,.22);border-radius:50px}
+@media(max-width:700px){nav{padding:1rem 1.4rem}.nav-links{display:none;position:fixed;top:60px;left:0;right:0;background:rgba(7,4,15,.97);flex-direction:column;padding:1.5rem 2rem;gap:1.2rem;border-bottom:1px solid var(--border);z-index:499}.nav-links.open{display:flex}.hamburger{display:flex}.modal-details{grid-template-columns:1fr}.cta-inner{padding:2.5rem 1.5rem}}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<nav>
+  <a href="#" class="nav-logo"><img class="nav-logo-img" id="nav-logo-img" src="" alt=""><span id="nav-logo-text">🪷 Lotus</span></a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#produtos" onclick="closeMobileMenu()">Produtos</a></li>
+    <li><a href="#feedbacks" onclick="closeMobileMenu()">Feedbacks</a></li>
+    <li><a href="#como-funciona" onclick="closeMobileMenu()">Como Funciona</a></li>
+    <li><a href="#contato" onclick="closeMobileMenu()">Contato</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<section id="hero">
+  <div class="lotus-ring" id="hero-ring"><span class="hero-icon" id="hero-icon">🪷</span></div>
+  <h1 id="hero-name">Lotus Personalizados</h1>
+  <p class="hero-sub" id="hero-tagline">Papelaria Personalizada · Feito à Mão com Amor</p>
+  <p class="hero-desc" id="hero-desc">Criamos peças únicas com carinho e dedicação. Cada detalhe é pensado especialmente para você.</p>
+  <div class="btn-group">
+    <a href="#produtos" class="btn btn-primary">✨ Ver Produtos</a>
+    <a href="#contato" class="btn btn-outline">💬 Encomendar</a>
+  </div>
+</section>
+<div id="contact-bar"><div class="inner" id="contact-bar-inner"></div></div>
+<section id="produtos">
+  <span class="section-label fade-up">Nosso Catálogo</span>
+  <h2 class="section-title fade-up">Peças Feitas<br>com Carinho</h2>
+  <div class="divider fade-up"></div>
+  <div class="products-grid" id="products-grid"></div>
+</section>
+<span class="pulse-line" style="margin:2rem auto;display:block"></span>
+<section id="feedbacks">
+  <span class="section-label fade-up">Avaliações</span>
+  <h2 class="section-title fade-up">O que Dizem<br>Nossas Clientes</h2>
+  <div class="divider fade-up"></div>
+  <div class="feedbacks-grid" id="feedbacks-grid"></div>
+</section>
+<span class="pulse-line" style="margin:4rem auto;display:block"></span>
+<section id="como-funciona">
+  <div class="steps-wrap">
+    <span class="section-label fade-up">Processo</span>
+    <h2 class="section-title fade-up">Como Funciona<br>Nosso Atendimento</h2>
+    <div class="divider fade-up"></div>
+    <div class="steps">
+      <div class="step fade-up"><div class="step-num">01</div><div class="step-title">Encomendas com Antecedência</div><p class="step-text">Para qualidade impecável, pedimos pelo menos <strong style="color:var(--soft)">3 semanas de antecedência</strong>. A pressa é inimiga da perfeição.</p></div>
+      <div class="step fade-up"><div class="step-num">02</div><div class="step-title">Dúvidas e Informações</div><p class="step-text">Nossa equipe está pronta no <strong style="color:var(--soft)">direct ou WhatsApp</strong> para alinhar todas as expectativas antes do pedido.</p></div>
+      <div class="step fade-up"><div class="step-num">03</div><div class="step-title">Valores e Pagamento</div><p class="step-text">Aceitamos <strong style="color:var(--soft)">Pix, Cartão e Dinheiro</strong>. Atendimento personalizado para cada cliente.</p><div class="payment-badges"><span class="badge">💸 Pix</span><span class="badge">💳 Cartão</span><span class="badge">💵 Dinheiro</span></div></div>
+    </div>
+  </div>
+</section>
+<section id="contato">
+  <div class="cta-inner fade-up">
+    <span class="section-label" style="display:block;text-align:center;margin-bottom:.5rem">Vamos Criar Juntas</span>
+    <h2 class="section-title" style="text-align:center;font-size:clamp(1.8rem,4vw,2.7rem);margin-bottom:.8rem">Pronta para<br>Encomendar?</h2>
+    <p style="color:rgba(255,255,255,.42);font-size:.84rem;font-weight:300;line-height:1.85;text-align:center;max-width:360px;margin:0 auto 2rem">Estamos à disposição para tornar sua experiência a mais tranquila e agradável possível!</p>
+    <div class="btn-group">
+      <a id="cta-wa" href="#" class="btn btn-primary" target="_blank">💬 WhatsApp</a>
+      <a id="cta-ig" href="#" class="btn btn-outline" target="_blank">📸 Instagram</a>
+    </div>
+    <p id="cta-handle" style="color:rgba(255,255,255,.18);font-size:.7rem;letter-spacing:.15em;text-align:center;margin-top:1.8rem;text-transform:uppercase"></p>
+  </div>
+</section>
+<footer>
+  <p>🪷 <span id="footer-name">Lotus Personalizados</span> · Papelaria Personalizada Feita à Mão com Amor ♡</p>
+  <p style="margin-top:.4rem" id="footer-loc"></p>
+</footer>
+<a id="fab-wa" href="#" target="_blank" class="fab" title="WhatsApp">💬</a>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="product-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-main-img" id="modal-main-img">
+      <span class="modal-emoji" id="modal-emoji">🪷</span>
+      <img id="modal-img-el" src="" alt="" style="display:none">
+      <div class="modal-img-ov"></div>
+    </div>
+    <div class="modal-gallery" id="modal-gallery"></div>
+    <div class="modal-content">
+      <h3 class="modal-title" id="modal-title"></h3>
+      <div class="modal-price-tag" id="modal-price"></div>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-details" id="modal-details"></div>
+      <a id="modal-wa" href="#" target="_blank" class="btn btn-primary modal-cta">💬 Encomendar via WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  BANCO DE DADOS — IndexedDB
+// ═══════════════════════════════════════════
+const DB = (function(){
+  const NAME='lotus_db', VER=1;
+  let db=null;
+  function open(){
+    return new Promise((res,rej)=>{
+      if(db){res(db);return;}
+      const r=indexedDB.open(NAME,VER);
+      r.onupgradeneeded=e=>{
+        const d=e.target.result;
+        if(!d.objectStoreNames.contains('info')) d.createObjectStore('info',{keyPath:'k'});
+        if(!d.objectStoreNames.contains('products')) d.createObjectStore('products',{keyPath:'id'});
+        if(!d.objectStoreNames.contains('feedbacks')) d.createObjectStore('feedbacks',{keyPath:'id'});
+      };
+      r.onsuccess=e=>{db=e.target.result;res(db);};
+      r.onerror=e=>rej(e.target.error);
+    });
+  }
+  function p(req){return new Promise((res,rej)=>{req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);})}
+  function store(name,mode='readonly'){return db.transaction([name],mode).objectStore(name);}
+  async function getInfo(){await open();const r=await p(store('info').get('site_info'));return r?r.v:null;}
+  async function setInfo(v){await open();await p(store('info','readwrite').put({k:'site_info',v}));}
+  async function getCreds(){await open();const r=await p(store('info').get('creds'));return r?r.v:null;}
+  async function setCreds(v){await open();await p(store('info','readwrite').put({k:'creds',v}));}
+  async function getProducts(){await open();return p(store('products').getAll());}
+  async function putProduct(prod){await open();if(!prod.id)prod.id=Date.now();await p(store('products','readwrite').put(prod));return prod;}
+  async function delProduct(id){await open();await p(store('products','readwrite').delete(id));}
+  async function getFeedbacks(){await open();return p(store('feedbacks').getAll());}
+  async function putFeedback(fb){await open();if(!fb.id)fb.id=Date.now();await p(store('feedbacks','readwrite').put(fb));return fb;}
+  async function delFeedback(id){await open();await p(store('feedbacks','readwrite').delete(id));}
+  async function seed(){
+    await open();
+    const prods=await getProducts();
+    if(prods.length)return;
+    await setInfo({siteName:'Lotus Personalizados',tagline:'Papelaria Personalizada · Feito à Mão com Amor',desc:'Criamos peças únicas com carinho e dedicação. Cada detalhe é pensado especialmente para você.',whatsapp:'',email:'',instagram:'lotus_personalizados_',address:'Campos Belos, Goiás',logoData:''});
+    await setCreds({user:'admin',pass:'lotus2024'});
+    await putProduct({id:1,name:'Buquê de Rosas Vermelhas',price:'A consultar',desc:'Rosas artesanais com chocolates e laço decorativo.',fullDesc:'Buquê feito à mão com rosas de papel crepom, acompanhado de bombons sortidos e laço de fita personalizado. Disponível em diversas cores e tamanhos.',prazo:'3 semanas',custom:'Cores, tamanho e chocolates',emoji:'🌹',tag:'Sob Encomenda',photos:[],gradient:'rgba(180,30,60,.25),rgba(107,79,160,.3)'});
+    await putProduct({id:2,name:'Buquê Azul com Borboletas',price:'A consultar',desc:'Rosas de cetim azul royal com borboletas douradas.',fullDesc:'Buquê de rosas de cetim azul royal adornadas com borboletas douradas, embalado em papel especial e fita acetinada.',prazo:'3 semanas',custom:'Cor das borboletas e fita',emoji:'💙',tag:'Personalizado',photos:[],gradient:'rgba(30,80,180,.3),rgba(107,79,160,.35)'});
+    await putProduct({id:3,name:'Papelaria Personalizada',price:'A consultar',desc:'Cadernos, cartões e convites com seu estilo único.',fullDesc:'Cadernos, cartões de mensagem, convites e outros itens de papelaria feitos à mão. Cada peça é única.',prazo:'2-3 semanas',custom:'Tema, cores e texto',emoji:'📝',tag:'Exclusivo',photos:[],gradient:'rgba(160,100,79,.2),rgba(45,27,105,.4)'});
+    await putFeedback({id:1,stars:5,text:'Amei demais! Chegou no prazo e ficou ainda mais lindo do que eu esperava!',author:'Ana P.',date:'Maio 2026'});
+    await putFeedback({id:2,stars:5,text:'Atendimento super atencioso e o produto é uma obra de arte. Presenteei minha mãe e ela chorou 💜',author:'Júlia M.',date:'Abril 2026'});
+    await putFeedback({id:3,stars:5,text:'Qualidade incrível! Cada detalhe pensado com muito carinho. Recomendo de olhos fechados!',author:'Fernanda K.',date:'Março 2026'});
+  }
+  async function exportAll(){await open();const[info,creds,products,feedbacks]=await Promise.all([getInfo(),getCreds(),getProducts(),getFeedbacks()]);return{info,creds,products,feedbacks,at:new Date().toISOString()};}
+  async function importAll(data){
+    await open();
+    if(data.info)await setInfo(data.info);
+    if(data.creds)await setCreds(data.creds);
+    if(data.products){await p(store('products','readwrite').clear());for(const x of data.products)await putProduct(x);}
+    if(data.feedbacks){await p(store('feedbacks','readwrite').clear());for(const x of data.feedbacks)await putFeedback(x);}
+  }
+  return{open,seed,getInfo,setInfo,getCreds,setCreds,getProducts,putProduct,delProduct,getFeedbacks,putFeedback,delFeedback,exportAll,importAll};
+})();
+
+// ═══════════════════════════════════════════
+//  SITE — render
+// ═══════════════════════════════════════════
+function toggleMenu(){document.getElementById('nav-links').classList.toggle('open');}
+function closeMobileMenu(){document.getElementById('nav-links').classList.remove('open');}
+
+async function renderSite(){
+  const [info,products,feedbacks]=await Promise.all([DB.getInfo(),DB.getProducts(),DB.getFeedbacks()]);
+  const i=info||{};
+  document.getElementById('hero-name').textContent=i.siteName||'Lotus Personalizados';
+  document.getElementById('hero-tagline').textContent=i.tagline||'';
+  document.getElementById('hero-desc').textContent=i.desc||'';
+  document.getElementById('nav-logo-text').textContent='🪷 '+(i.siteName||'Lotus').split(' ')[0];
+  document.getElementById('footer-name').textContent=i.siteName||'Lotus Personalizados';
+  document.getElementById('footer-loc').textContent=(i.address||'')+(i.instagram?' · @'+i.instagram:'');
+
+  const ring=document.getElementById('hero-ring'),icon=document.getElementById('hero-icon'),navImg=document.getElementById('nav-logo-img');
+  if(i.logoData){
+    icon.style.display='none';
+    let img=ring.querySelector('.hero-logo-img');
+    if(!img){img=document.createElement('img');img.className='hero-logo-img';img.style.cssText='width:100%;height:100%;border-radius:50%;object-fit:cover;position:absolute;inset:0';ring.appendChild(img);}
+    img.src=i.logoData;navImg.src=i.logoData;navImg.style.display='block';
+  }else{icon.style.display='';navImg.style.display='none';}
+
+  const bar=document.getElementById('contact-bar-inner');
+  const bits=[];
+  if(i.email)bits.push(`<span class="contact-item">✉️ <strong>${i.email}</strong></span>`);
+  if(i.whatsapp){const w=i.whatsapp;bits.push(`<span class="contact-item">📱 <strong>(${w.slice(0,2)}) ${w.slice(2,7)}-${w.slice(7)}</strong></span>`);}
+  if(i.address)bits.push(`<span class="contact-item">📍 <strong>${i.address}</strong></span>`);
+  if(i.instagram)bits.push(`<span class="contact-item">📸 <strong>@${i.instagram}</strong></span>`);
+  bar.innerHTML=bits.join('')||'<span class="contact-item" style="color:rgba(255,255,255,.2);font-style:italic">Configure as informações no painel admin</span>';
+
+  const wa=i.whatsapp?'https://wa.me/55'+i.whatsapp:'#';
+  document.getElementById('cta-wa').href=wa;
+  document.getElementById('fab-wa').href=wa;
+  document.getElementById('cta-ig').href=i.instagram?'https://instagram.com/'+i.instagram:'#';
+  document.getElementById('cta-handle').textContent=i.instagram?'@'+i.instagram:'';
+
+  // products
+  const grid=document.getElementById('products-grid');
+  grid.innerHTML='';
+  products.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='product-card fade-up';
+    card.onclick=()=>openModal(p,i);
+    const ph=p.photos&&p.photos.length?p.photos[0].data:'';
+    const bg=p.gradient||'rgba(107,79,160,.2),rgba(45,27,105,.4)';
+    card.innerHTML=`<div class="card-img-wrap"><div class="card-img-inner" style="background:linear-gradient(135deg,${bg})">${ph?`<img src="${ph}" alt="${p.name}">`:`<span class="card-emoji">${p.emoji||'🪷'}</span>`}</div><div class="card-shine"></div></div><div class="card-body"><div class="card-top"><div class="card-title">${p.name}</div><div class="card-price">${p.price||'A consultar'}</div></div><p class="card-desc">${p.desc||''}</p><span class="card-tag">${p.tag||'Sob Encomenda'}</span></div>`;
+    grid.appendChild(card);
+  });
+  const plus=document.createElement('div');
+  plus.className='product-card fade-up';
+  plus.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:290px;text-align:center;padding:2rem;cursor:default';
+  plus.innerHTML=`<div style="font-size:3rem;margin-bottom:1rem;filter:drop-shadow(0 0 14px var(--glow))">✨</div><div class="card-title" style="margin-bottom:.5rem">Algo Especial?</div><p class="card-desc" style="margin-bottom:1.5rem">Criamos o que você imaginar.</p><a href="#contato" class="btn btn-outline" style="font-size:.7rem;padding:.62rem 1.5rem">Encomendar Agora</a>`;
+  grid.appendChild(plus);
+
+  // feedbacks
+  const fbGrid=document.getElementById('feedbacks-grid');
+  fbGrid.innerHTML='';
+  if(!feedbacks.length){
+    fbGrid.innerHTML='<div style="text-align:center;padding:3rem;color:rgba(255,255,255,.22);font-style:italic;grid-column:1/-1">Seja a primeira a deixar seu depoimento! ✨</div>';
+  }else{
+    feedbacks.forEach(f=>{const c=document.createElement('div');c.className='feedback-card fade-up';c.innerHTML=`<div class="feedback-stars">${'★'.repeat(f.stars)}${'☆'.repeat(5-f.stars)}</div><p class="feedback-text">"${f.text}"</p><div><span class="feedback-author">— ${f.author}</span><span class="feedback-date">${f.date||''}</span></div>`;fbGrid.appendChild(c);});
+  }
+  observeAll();
+}
+
+function openModal(p,info){
+  const photos=p.photos||[];
+  const bg=p.gradient||'rgba(107,79,160,.2),rgba(45,27,105,.4)';
+  document.getElementById('modal-title').textContent=p.name;
+  document.getElementById('modal-price').textContent=p.price||'A consultar';
+  document.getElementById('modal-desc').textContent=p.fullDesc||p.desc||'';
+  document.getElementById('modal-main-img').style.background=`linear-gradient(135deg,${bg})`;
+  const em=document.getElementById('modal-emoji'),im=document.getElementById('modal-img-el');
+  function showPh(data){if(data){em.style.display='none';im.src=data;im.style.display='';}else{em.textContent=p.emoji||'🪷';em.style.display='';im.style.display='none';}}
+  showPh(photos.length?photos[0].data:'');
+  const gal=document.getElementById('modal-gallery');
+  gal.innerHTML='';
+  if(photos.length>1){
+    gal.style.display='flex';
+    photos.forEach((ph,i)=>{const t=document.createElement('div');t.className='gallery-thumb'+(i===0?' active':'');t.innerHTML=`<img src="${ph.data}">`;t.onclick=()=>{document.querySelectorAll('.gallery-thumb').forEach(x=>x.classList.remove('active'));t.classList.add('active');showPh(ph.data);};gal.appendChild(t);});
+  }else{gal.style.display='none';}
+  document.getElementById('modal-details').innerHTML=[['Prazo',p.prazo||'3 semanas'],['Personalização',p.custom||'Consulte-nos'],['Pagamento','Pix · Cartão · Dinheiro'],['Categoria',p.tag||'Sob Encomenda']].map(([l,v])=>`<div class="modal-detail"><div class="modal-detail-label">${l}</div><div class="modal-detail-val">${v}</div></div>`).join('');
+  const wa=info&&info.whatsapp?'https://wa.me/55'+info.whatsapp+'?text=Olá! Tenho interesse: '+encodeURIComponent(p.name):'#';
+  document.getElementById('modal-wa').href=wa;
+  document.getElementById('product-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('product-modal').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+const obs=new IntersectionObserver(entries=>{entries.forEach(en=>{if(en.isIntersecting){const el=en.target,sibs=[...el.parentElement.querySelectorAll('.fade-up')];setTimeout(()=>el.classList.add('visible'),sibs.indexOf(el)*75);obs.unobserve(el);}});},{threshold:.1});
+function observeAll(){document.querySelectorAll('.fade-up:not(.visible)').forEach(el=>obs.observe(el));}
+
+// stars
+const se=document.getElementById('stars');
+for(let i=0;i<110;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.2+.5;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${Math.random()*4+2}s;--dl:${Math.random()*5}s;--b:${Math.random()*.45+.2}`;se.appendChild(s);}
+
+// boot
+(async()=>{await DB.seed();await renderSite();observeAll();})();
+</script>
+</body>
+</html>
