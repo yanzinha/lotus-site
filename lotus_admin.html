@@ -10,12 +10,17 @@
 *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
 body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 10%,rgba(107,79,160,.18),transparent 50%),radial-gradient(ellipse at 80% 90%,rgba(45,27,105,.22),transparent 50%),#07040f;z-index:-1;pointer-events:none}
-#login-screen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:radial-gradient(ellipse at 30% 30%,rgba(107,79,160,.22),transparent 55%),radial-gradient(ellipse at 70% 70%,rgba(45,27,105,.28),transparent 55%),#07040f;transition:opacity .5s,transform .5s}
+#loading{position:fixed;inset:0;z-index:9999;background:#07040f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:opacity .5s}
+#loading.hide{opacity:0;pointer-events:none}
+.spinner{width:44px;height:44px;border:2px solid rgba(180,140,220,.15);border-top-color:var(--soft);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+#login-screen{position:fixed;inset:0;z-index:999;display:none;align-items:center;justify-content:center;padding:1.5rem;background:radial-gradient(ellipse at 30% 30%,rgba(107,79,160,.22),transparent 55%),radial-gradient(ellipse at 70% 70%,rgba(45,27,105,.28),transparent 55%),#07040f;transition:opacity .5s,transform .5s}
+#login-screen.visible{display:flex}
 #login-screen.hiding{opacity:0;transform:scale(1.05);pointer-events:none}
 .login-box{position:relative;width:100%;max-width:420px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:28px;padding:3rem 2.5rem;backdrop-filter:blur(24px);box-shadow:0 30px 100px rgba(0,0,0,.6);text-align:center}
 .login-lotus{font-size:3.5rem;margin-bottom:.5rem;animation:float 5s ease-in-out infinite;display:block;filter:drop-shadow(0 0 22px var(--glow))}
 .login-logo-img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:2px solid rgba(180,140,220,.3);margin-bottom:.5rem;display:none;animation:float 5s ease-in-out infinite;box-shadow:0 0 30px var(--glow)}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 .login-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;background:linear-gradient(135deg,var(--white),var(--soft));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.3rem}
 .login-sub{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:2.5rem}
 .lf{margin-bottom:1.2rem;text-align:left}
@@ -28,7 +33,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .login-err.show{opacity:1}
 .login-hint{margin-top:1.5rem;font-size:.68rem;color:rgba(255,255,255,.2)}
 .login-hint strong{color:rgba(255,255,255,.35)}
-#app{display:none;min-height:100vh}#app.on{display:flex}
+#app{display:none;min-height:100vh}
+#app.on{display:flex}
 .sb{width:240px;min-height:100vh;flex-shrink:0;background:rgba(255,255,255,.025);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
 .sb-logo{padding:1.8rem 1.5rem 1.2rem;border-bottom:1px solid var(--border)}
 .sb-logo-wrap{display:flex;align-items:center;gap:.75rem}
@@ -48,7 +54,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 .topbar{padding:1.1rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.015);backdrop-filter:blur(10px);position:sticky;top:0;z-index:50}
 .tl{display:flex;align-items:center;gap:.8rem}
-.pi{font-size:1.2rem}.pt{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400}
+.pi{font-size:1.2rem}
+.ptitle{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400}
 .mob-btn{display:none;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--soft);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:1rem;align-items:center;justify-content:center}
 .view-link{display:flex;align-items:center;gap:.4rem;padding:.45rem 1.1rem;background:rgba(107,79,160,.18);border:1px solid var(--border);border-radius:50px;color:var(--soft);font-size:.73rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:all .3s;font-family:'Jost',sans-serif}
 .view-link:hover{background:rgba(107,79,160,.32);border-color:var(--soft)}
@@ -65,13 +72,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .st{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400;color:var(--soft);margin-bottom:1.3rem;display:flex;align-items:center;gap:.5rem}
 .st::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);margin-left:.8rem}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.fg.one{grid-template-columns:1fr}
 .fi{margin-bottom:1rem}
 .fi label{display:block;font-size:.67rem;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:.4rem}
 .fi input,.fi textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(180,140,220,.2);border-radius:12px;padding:.72rem 1rem;color:var(--white);font-family:'Jost',sans-serif;font-size:.85rem;outline:none;transition:all .3s}
 .fi input:focus,.fi textarea:focus{border-color:rgba(180,140,220,.5);box-shadow:0 0 16px rgba(107,79,160,.22)}
 .fi textarea{resize:vertical;min-height:80px;line-height:1.6}
-/* PHOTO */
 .dz{border:2px dashed rgba(180,140,220,.3);border-radius:16px;padding:2.2rem 1.5rem;text-align:center;cursor:pointer;transition:all .35s;background:rgba(107,79,160,.04)}
 .dz:hover,.dz.over{border-color:var(--soft);background:rgba(107,79,160,.1);box-shadow:0 0 30px rgba(107,79,160,.2)}
 .dz.over{border-style:solid}
@@ -92,7 +97,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .ph-set{position:absolute;bottom:.3rem;left:.3rem;background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-size:.58rem;padding:.18rem .5rem;border-radius:50px;cursor:pointer;opacity:0;transition:opacity .25s}
 .ph-item:hover .ph-set{opacity:1}
 .ph-hint{font-size:.72rem;color:rgba(255,255,255,.28);margin-top:.5rem;font-style:italic}
-/* PROFILE */
 .prof-box{display:flex;flex-direction:column;align-items:center;gap:1rem}
 @media(min-width:600px){.prof-box{flex-direction:row;align-items:flex-start}}
 .prof-circle{width:120px;height:120px;border-radius:50%;border:2px dashed rgba(180,140,220,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;background:rgba(107,79,160,.06);transition:all .3s;cursor:pointer;overflow:hidden}
@@ -110,7 +114,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .pu-a:hover{background:rgba(107,79,160,.42);border-color:var(--soft)}
 .pu-r{background:rgba(192,68,90,.15);border:1px solid rgba(192,68,90,.25);color:#f08090}
 .pu-r:hover{background:rgba(192,68,90,.28)}
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:.45rem;padding:.72rem 1.8rem;border-radius:50px;font-family:'Jost',sans-serif;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;border:none;transition:all .3s;text-decoration:none;position:relative;overflow:hidden}
 .btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.14),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
 .btn:hover::before{opacity:1}.btn:hover{transform:translateY(-2px)}
@@ -122,7 +125,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .btn-d:hover{background:rgba(192,68,90,.32)}
 .btn-sm{padding:.45rem 1rem;font-size:.68rem}
 .bg{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-top:1.4rem}
-/* TABLE */
 .tw{background:rgba(255,255,255,.022);border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:1.5rem}
 table{width:100%;border-collapse:collapse}
 th{font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);padding:.7rem 1rem;border-bottom:1px solid var(--border);text-align:left;font-weight:400}
@@ -130,17 +132,16 @@ td{padding:.85rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.
 tr:last-child td{border-bottom:none}
 tr:hover td{background:rgba(107,79,160,.07)}
 .te{padding:2.5rem;text-align:center;color:rgba(255,255,255,.22);font-style:italic;font-size:.85rem}
-.pt{width:44px;height:44px;border-radius:10px;background:rgba(107,79,160,.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;overflow:hidden;flex-shrink:0}
-.pt img{width:100%;height:100%;object-fit:cover}
-.pc{display:flex;align-items:center;gap:.8rem}
-.tb{display:inline-block;padding:.2rem .7rem;border-radius:50px;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid rgba(180,140,220,.25);color:var(--acc);background:rgba(107,79,160,.1)}
+.pthumb{width:44px;height:44px;border-radius:10px;background:rgba(107,79,160,.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;overflow:hidden;flex-shrink:0}
+.pthumb img{width:100%;height:100%;object-fit:cover}
+.pcell{display:flex;align-items:center;gap:.8rem}
+.tbadge{display:inline-block;padding:.2rem .7rem;border-radius:50px;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid rgba(180,140,220,.25);color:var(--acc);background:rgba(107,79,160,.1)}
 .sd{color:#e2c96e;font-size:.85rem}
 .star-btn{background:none;border:none;font-size:1.5rem;cursor:pointer;opacity:.28;transition:all .2s;padding:0;color:#e2c96e}
 .star-btn.on{opacity:1}.star-btn:hover{transform:scale(1.2)}
-/* BACKUP */
-.bx{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;padding:1.2rem;background:rgba(107,79,160,.06);border:1px solid var(--border);border-radius:14px;margin-top:1rem}
-.bi{font-size:.8rem;color:rgba(255,255,255,.45);line-height:1.6;flex:1}
-/* TOAST */
+.saving-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);z-index:8000;display:none;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.saving-overlay.show{display:flex}
+.saving-text{font-size:.88rem;letter-spacing:.15em;text-transform:uppercase;color:var(--soft)}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,var(--mid),var(--deep));border:1px solid rgba(180,140,220,.3);border-radius:50px;padding:.72rem 2rem;font-size:.78rem;letter-spacing:.1em;color:var(--white);z-index:9990;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;box-shadow:0 4px 30px rgba(107,79,160,.5)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:linear-gradient(135deg,#2a7a5a,#1a4a3a)}
@@ -150,6 +151,18 @@ tr:hover td{background:rgba(107,79,160,.07)}
 </style>
 </head>
 <body>
+
+<div id="loading">
+  <span style="font-size:3rem;animation:float 2s ease-in-out infinite">🪷</span>
+  <div class="spinner"></div>
+  <div style="font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">Carregando...</div>
+</div>
+
+<div class="saving-overlay" id="saving-overlay">
+  <div class="spinner"></div>
+  <div class="saving-text">Salvando no servidor...</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- LOGIN -->
@@ -185,7 +198,6 @@ tr:hover td{background:rgba(107,79,160,.07)}
       <div class="sb-item" onclick="goTab('prods',this)"><span class="si">🛍</span> Produtos</div>
       <div class="sb-item" onclick="goTab('fbs',this)"><span class="si">💬</span> Feedbacks</div>
       <div class="sb-lbl">Sistema</div>
-      <div class="sb-item" onclick="goTab('bkp',this)"><span class="si">💾</span> Backup</div>
       <div class="sb-item" onclick="goTab('seg',this)"><span class="si">🔒</span> Segurança</div>
     </nav>
     <div class="sb-bot"><div class="sb-logout" onclick="doLogout()"><span class="si">🚪</span> Sair</div></div>
@@ -196,12 +208,13 @@ tr:hover td{background:rgba(107,79,160,.07)}
       <div class="tl">
         <button class="mob-btn" onclick="document.getElementById('sb').classList.toggle('open')">☰</button>
         <span class="pi" id="t-icon">📊</span>
-        <h2 class="pt" id="t-title">Dashboard</h2>
+        <h2 class="ptitle" id="t-title">Dashboard</h2>
       </div>
       <a href="lotus_personalizados.html" target="_blank" class="view-link">👁 Ver Site</a>
     </header>
 
     <div class="content">
+
       <!-- DASHBOARD -->
       <div class="tab on" id="tab-dash">
         <div class="stats" id="stats"></div>
@@ -284,7 +297,7 @@ tr:hover td{background:rgba(107,79,160,.07)}
             <div class="fi"><label>Tag</label><input type="text" id="p-tag" placeholder="Sob Encomenda"></div>
           </div>
           <div class="bg">
-            <button class="btn btn-p" onclick="saveProd()">💾 Salvar</button>
+            <button class="btn btn-p" onclick="saveProd()">💾 Salvar Produto</button>
             <button class="btn btn-g" onclick="clearProd()">✕ Cancelar</button>
           </div>
         </div>
@@ -321,24 +334,11 @@ tr:hover td{background:rgba(107,79,160,.07)}
         </div>
       </div>
 
-      <!-- BACKUP -->
-      <div class="tab" id="tab-bkp">
-        <div class="fc">
-          <div class="st">💾 Backup dos Dados</div>
-          <p style="font-size:.83rem;color:rgba(255,255,255,.45);line-height:1.75;margin-bottom:1rem">Exporte todos os dados para um arquivo JSON. Importe para restaurar em outro dispositivo.</p>
-          <div class="bx"><div class="bi">📦 <strong style="color:var(--soft)">Exportar Backup</strong><br>Baixa um arquivo com todos os dados.</div><button class="btn btn-p" onclick="expBkp()">⬇ Exportar</button></div>
-          <div class="bx" style="margin-top:.8rem"><div class="bi">📂 <strong style="color:var(--soft)">Restaurar Backup</strong><br>Importa um arquivo de backup anterior.</div><button class="btn btn-g" onclick="document.getElementById('bkp-inp').click()">⬆ Importar</button><input type="file" id="bkp-inp" accept=".json" style="display:none" onchange="impBkp(this)"></div>
-        </div>
-        <div class="fc">
-          <div class="st">ℹ️ Sobre o Banco de Dados</div>
-          <p style="font-size:.83rem;color:rgba(255,255,255,.45);line-height:1.8">Este site usa <strong style="color:var(--soft)">IndexedDB</strong> — banco de dados embutido no navegador com capacidade de centenas de MB. Os dados ficam neste dispositivo. Use o backup para transferir entre dispositivos.</p>
-        </div>
-      </div>
-
       <!-- SEGURANÇA -->
       <div class="tab" id="tab-seg">
         <div class="fc" style="max-width:460px">
           <div class="st">🔑 Alterar Credenciais</div>
+          <p style="font-size:.82rem;color:rgba(255,255,255,.38);line-height:1.7;margin-bottom:1.2rem">As credenciais ficam salvas no servidor. Após alterar, use as novas para entrar.</p>
           <div style="display:flex;flex-direction:column;gap:1rem;max-width:380px">
             <div class="fi"><label>Novo Usuário</label><input type="text" id="nu" placeholder="admin" autocomplete="off"></div>
             <div class="fi"><label>Senha Atual</label><input type="password" id="cp" placeholder="Senha atual"></div>
@@ -353,97 +353,159 @@ tr:hover td{background:rgba(107,79,160,.07)}
           <button class="btn btn-d" onclick="doLogout()">🚪 Encerrar Sessão</button>
         </div>
       </div>
+
     </div>
   </main>
 </div>
 
 <script>
 // ═══════════════════════════════════════════
-//  BANCO DE DADOS — IndexedDB (embutido)
+//  GITHUB DATABASE
 // ═══════════════════════════════════════════
-const DB=(function(){
-  const NAME='lotus_db',VER=1;let db=null;
-  function open(){return new Promise((res,rej)=>{if(db){res(db);return;}const r=indexedDB.open(NAME,VER);r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('info'))d.createObjectStore('info',{keyPath:'k'});if(!d.objectStoreNames.contains('products'))d.createObjectStore('products',{keyPath:'id'});if(!d.objectStoreNames.contains('feedbacks'))d.createObjectStore('feedbacks',{keyPath:'id'});};r.onsuccess=e=>{db=e.target.result;res(db);};r.onerror=e=>rej(e.target.error);});}
-  function p(req){return new Promise((res,rej)=>{req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);});}
-  function s(name,mode='readonly'){return db.transaction([name],mode).objectStore(name);}
-  async function getInfo(){await open();const r=await p(s('info').get('site_info'));return r?r.v:null;}
-  async function setInfo(v){await open();await p(s('info','readwrite').put({k:'site_info',v}));}
-  async function getCreds(){await open();const r=await p(s('info').get('creds'));return r?r.v:null;}
-  async function setCreds(v){await open();await p(s('info','readwrite').put({k:'creds',v}));}
-  async function getProds(){await open();return p(s('products').getAll());}
-  async function putProd(x){await open();if(!x.id)x.id=Date.now();await p(s('products','readwrite').put(x));return x;}
-  async function delProd(id){await open();await p(s('products','readwrite').delete(id));}
-  async function getFbs(){await open();return p(s('feedbacks').getAll());}
-  async function putFb(x){await open();if(!x.id)x.id=Date.now();await p(s('feedbacks','readwrite').put(x));return x;}
-  async function delFb(id){await open();await p(s('feedbacks','readwrite').delete(id));}
-  async function seed(){
-    await open();const pr=await getProds();if(pr.length)return;
-    await setInfo({siteName:'Lotus Personalizados',tagline:'Papelaria Personalizada · Feito à Mão com Amor',desc:'Criamos peças únicas com carinho e dedicação.',whatsapp:'',email:'',instagram:'lotus_personalizados_',address:'Campos Belos, Goiás',logoData:''});
-    await setCreds({user:'admin',pass:'lotus2024'});
-    await putProd({id:1,name:'Buquê de Rosas Vermelhas',price:'A consultar',desc:'Rosas artesanais com chocolates e laço decorativo.',fullDesc:'Buquê feito à mão com rosas de papel crepom, acompanhado de bombons e laço personalizado.',prazo:'3 semanas',custom:'Cores, tamanho e chocolates',emoji:'🌹',tag:'Sob Encomenda',photos:[],gradient:'rgba(180,30,60,.25),rgba(107,79,160,.3)'});
-    await putProd({id:2,name:'Buquê Azul com Borboletas',price:'A consultar',desc:'Rosas de cetim azul royal com borboletas douradas.',fullDesc:'Buquê de rosas de cetim azul royal com borboletas douradas e embalagem especial.',prazo:'3 semanas',custom:'Cor das borboletas e fita',emoji:'💙',tag:'Personalizado',photos:[],gradient:'rgba(30,80,180,.3),rgba(107,79,160,.35)'});
-    await putProd({id:3,name:'Papelaria Personalizada',price:'A consultar',desc:'Cadernos, cartões e convites únicos.',fullDesc:'Papelaria artesanal feita à mão com carinho. Cada peça é única e especial.',prazo:'2-3 semanas',custom:'Tema, cores e texto',emoji:'📝',tag:'Exclusivo',photos:[],gradient:'rgba(160,100,79,.2),rgba(45,27,105,.4)'});
-    await putFb({id:1,stars:5,text:'Amei demais! Chegou no prazo e ficou ainda mais lindo do que eu esperava!',author:'Ana P.',date:'Maio 2026'});
-    await putFb({id:2,stars:5,text:'Atendimento super atencioso e o produto é uma obra de arte. Presenteei minha mãe e ela chorou 💜',author:'Júlia M.',date:'Abril 2026'});
-    await putFb({id:3,stars:5,text:'Qualidade incrível! Cada detalhe pensado com muito carinho. Recomendo!',author:'Fernanda K.',date:'Março 2026'});
+const GH = {
+  token: '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',
+  owner: 'yanzinha',
+  repo:  'lotus-site',
+  file:  'lotus_data.json',
+
+  async load(){
+    try{
+      const r = await fetch(`https://api.github.com/repos/${this.owner}/${this.repo}/contents/${this.file}`,{
+        headers:{'Authorization':'token '+this.token,'Accept':'application/vnd.github.v3+json','Cache-Control':'no-cache'}
+      });
+      if(r.status===404) return this.defaults();
+      const j = await r.json();
+      return JSON.parse(atob(j.content.replace(/\n/g,'')));
+    }catch(e){ return this.defaults(); }
+  },
+
+  async save(data){
+    showSaving(true);
+    try{
+      let sha = null;
+      try{
+        const r = await fetch(`https://api.github.com/repos/${this.owner}/${this.repo}/contents/${this.file}`,{
+          headers:{'Authorization':'token '+this.token,'Accept':'application/vnd.github.v3+json'}
+        });
+        if(r.ok){ const j=await r.json(); sha=j.sha; }
+      }catch(e){}
+
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+      const body = {message:'update data',content};
+      if(sha) body.sha = sha;
+
+      const r = await fetch(`https://api.github.com/repos/${this.owner}/${this.repo}/contents/${this.file}`,{
+        method:'PUT',
+        headers:{'Authorization':'token '+this.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      showSaving(false);
+      return r.ok;
+    }catch(e){ showSaving(false); return false; }
+  },
+
+  defaults(){
+    return {
+      info:{siteName:'Lotus Personalizados',tagline:'Papelaria Personalizada · Feito à Mão com Amor',desc:'Criamos peças únicas com carinho e dedicação. Cada detalhe é pensado especialmente para você.',whatsapp:'',email:'',instagram:'lotus_personalizados_',address:'Campos Belos, Goiás',logoData:''},
+      creds:{user:'admin',pass:'lotus2024'},
+      products:[
+        {id:1,name:'Buquê de Rosas Vermelhas',price:'A consultar',desc:'Rosas artesanais com chocolates e laço decorativo.',fullDesc:'Buquê feito à mão com rosas de papel crepom, acompanhado de bombons sortidos e laço de fita personalizado.',prazo:'3 semanas',custom:'Cores, tamanho e chocolates',emoji:'🌹',tag:'Sob Encomenda',photos:[],gradient:'rgba(180,30,60,.25),rgba(107,79,160,.3)'},
+        {id:2,name:'Buquê Azul com Borboletas',price:'A consultar',desc:'Rosas de cetim azul royal com borboletas douradas.',fullDesc:'Buquê de rosas de cetim azul royal adornadas com borboletas douradas.',prazo:'3 semanas',custom:'Cor das borboletas e fita',emoji:'💙',tag:'Personalizado',photos:[],gradient:'rgba(30,80,180,.3),rgba(107,79,160,.35)'},
+        {id:3,name:'Papelaria Personalizada',price:'A consultar',desc:'Cadernos, cartões e convites com seu estilo único.',fullDesc:'Papelaria artesanal feita à mão. Cada peça é única.',prazo:'2-3 semanas',custom:'Tema, cores e texto',emoji:'📝',tag:'Exclusivo',photos:[],gradient:'rgba(160,100,79,.2),rgba(45,27,105,.4)'}
+      ],
+      feedbacks:[
+        {id:1,stars:5,text:'Amei demais! Chegou no prazo e ficou ainda mais lindo do que eu esperava!',author:'Ana P.',date:'Maio 2026'},
+        {id:2,stars:5,text:'Atendimento super atencioso e o produto é uma obra de arte 💜',author:'Júlia M.',date:'Abril 2026'},
+        {id:3,stars:5,text:'Qualidade incrível! Recomendo de olhos fechados!',author:'Fernanda K.',date:'Março 2026'}
+      ]
+    };
   }
-  async function exportAll(){await open();const[a,b,c,d]=await Promise.all([getInfo(),getCreds(),getProds(),getFbs()]);return{info:a,creds:b,products:c,feedbacks:d,at:new Date().toISOString()};}
-  async function importAll(data){
-    await open();
-    if(data.info)await setInfo(data.info);
-    if(data.creds)await setCreds(data.creds);
-    if(data.products){await p(s('products','readwrite').clear());for(const x of data.products)await putProd(x);}
-    if(data.feedbacks){await p(s('feedbacks','readwrite').clear());for(const x of data.feedbacks)await putFb(x);}
-  }
-  return{seed,getInfo,setInfo,getCreds,setCreds,getProds,putProd,delProd,getFbs,putFb,delFb,exportAll,importAll};
-})();
+};
+
+function showSaving(show){
+  document.getElementById('saving-overlay').classList.toggle('show',show);
+}
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let DATA = {};
+const SK = 'lotus_sess';
 
 // ═══════════════════════════════════════════
 //  AUTH
 // ═══════════════════════════════════════════
-const SK='lotus_sess';
 async function boot(){
-  await DB.seed();
-  const info=await DB.getInfo()||{};
-  const li=document.getElementById('ll-img'),lic=document.getElementById('ll-icon');
-  if(info.logoData){li.src=info.logoData;li.style.display='block';lic.style.display='none';}
+  DATA = await GH.load();
+  const pl=document.getElementById('loading');
+  pl.classList.add('hide');
+  setTimeout(()=>pl.style.display='none',500);
+
   if(sessionStorage.getItem(SK)==='ok'){
-    document.getElementById('login-screen').style.display='none';
     document.getElementById('app').classList.add('on');
-    await initApp();
+    initApp();
+  } else {
+    const ls=document.getElementById('login-screen');
+    ls.classList.add('visible');
+    // show logo on login if available
+    if(DATA.info&&DATA.info.logoData){
+      document.getElementById('ll-img').src=DATA.info.logoData;
+      document.getElementById('ll-img').style.display='block';
+      document.getElementById('ll-icon').style.display='none';
+    }
   }
 }
-async function doLogin(){
-  const u=document.getElementById('lu').value.trim(),pw=document.getElementById('lp').value;
-  const c=await DB.getCreds()||{user:'admin',pass:'lotus2024'};
+
+function doLogin(){
+  const u=document.getElementById('lu').value.trim();
+  const pw=document.getElementById('lp').value;
+  const c=DATA.creds||{user:'admin',pass:'lotus2024'};
   if(u===c.user&&pw===c.pass){
     sessionStorage.setItem(SK,'ok');
     const ls=document.getElementById('login-screen');
     ls.classList.add('hiding');
-    setTimeout(async()=>{ls.style.display='none';document.getElementById('app').classList.add('on');await initApp();},500);
-  }else{
-    const e=document.getElementById('lerr');e.classList.add('show');
+    setTimeout(()=>{
+      ls.classList.remove('visible','hiding');
+      document.getElementById('app').classList.add('on');
+      initApp();
+    },500);
+  } else {
+    const e=document.getElementById('lerr');
+    e.classList.add('show');
     document.getElementById('lp').value='';
     setTimeout(()=>e.classList.remove('show'),3000);
   }
 }
-function doLogout(){sessionStorage.removeItem(SK);location.reload();}
+
+function doLogout(){
+  sessionStorage.removeItem(SK);
+  location.reload();
+}
+
 async function changeCreds(){
-  const nu=document.getElementById('nu').value.trim(),cp=document.getElementById('cp').value,np=document.getElementById('np').value,cn=document.getElementById('cnp').value;
-  const c=await DB.getCreds()||{user:'admin',pass:'lotus2024'};
+  const nu=document.getElementById('nu').value.trim();
+  const cp=document.getElementById('cp').value;
+  const np=document.getElementById('np').value;
+  const cn=document.getElementById('cnp').value;
+  const c=DATA.creds||{user:'admin',pass:'lotus2024'};
   if(!cp||!np||!cn){toast('Preencha todos os campos!','err');return;}
   if(cp!==c.pass){toast('Senha atual incorreta!','err');return;}
   if(np.length<6){toast('Mínimo 6 caracteres.','err');return;}
   if(np!==cn){toast('As senhas não coincidem!','err');return;}
-  await DB.setCreds({user:nu||c.user,pass:np});
-  ['nu','cp','np','cnp'].forEach(id=>document.getElementById(id).value='');
-  toast('Credenciais atualizadas!','ok');
+  DATA.creds={user:nu||c.user,pass:np};
+  const ok = await GH.save(DATA);
+  if(ok){
+    ['nu','cp','np','cnp'].forEach(id=>document.getElementById(id).value='');
+    toast('Credenciais atualizadas!','ok');
+  } else {
+    toast('Erro ao salvar. Tente novamente.','err');
+  }
 }
 
 // ═══════════════════════════════════════════
 //  TABS
 // ═══════════════════════════════════════════
-const TM={dash:['📊','Dashboard'],info:['🏠','Informações'],prods:['🛍','Produtos'],fbs:['💬','Feedbacks'],bkp:['💾','Backup'],seg:['🔒','Segurança']};
+const TM={dash:['📊','Dashboard'],info:['🏠','Informações'],prods:['🛍','Produtos'],fbs:['💬','Feedbacks'],seg:['🔒','Segurança']};
 function goTab(name,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('on'));
@@ -452,44 +514,51 @@ function goTab(name,el){
   const[ic,ti]=TM[name]||['',''];
   document.getElementById('t-icon').textContent=ic;
   document.getElementById('t-title').textContent=ti;
-  if(name==='info')loadInfo();
-  if(name==='prods')renderProds();
-  if(name==='fbs')renderFbs();
+  if(name==='info')loadInfoFields();
+  if(name==='prods')renderProdsTable();
+  if(name==='fbs')renderFbsTable();
   document.getElementById('sb').classList.remove('open');
 }
 
 // ═══════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════
-async function initApp(){
-  const info=await DB.getInfo()||{};
-  updSbLogo(info);
-  await renderDash();
+function initApp(){
+  updSbLogo();
+  renderDash();
 }
-function updSbLogo(info){
+function updSbLogo(){
   const ic=document.getElementById('sb-ic'),img=document.getElementById('sb-img');
-  if(info&&info.logoData){img.src=info.logoData;img.style.display='block';ic.style.display='none';}
+  if(DATA.info&&DATA.info.logoData){img.src=DATA.info.logoData;img.style.display='block';ic.style.display='none';}
   else{img.style.display='none';ic.style.display='block';}
-  document.getElementById('sb-name').textContent=(info&&info.siteName)||'Lotus Admin';
+  document.getElementById('sb-name').textContent=(DATA.info&&DATA.info.siteName)||'Lotus Admin';
 }
 
 // ═══════════════════════════════════════════
 //  DASHBOARD
 // ═══════════════════════════════════════════
-async function renderDash(){
-  const[prods,fbs]=await Promise.all([DB.getProds(),DB.getFbs()]);
-  const info=await DB.getInfo()||{};
+function renderDash(){
+  const prods=DATA.products||[], fbs=DATA.feedbacks||[];
   const avg=fbs.length?(fbs.reduce((a,f)=>a+f.stars,0)/fbs.length).toFixed(1)+' ★':'—';
-  document.getElementById('stats').innerHTML=[{n:prods.length,l:'Produtos',i:'🛍'},{n:fbs.length,l:'Feedbacks',i:'💬'},{n:avg,l:'Avaliação Média',i:'⭐'},{n:info.whatsapp?'✓':'✗',l:'WhatsApp',i:'📱'}].map(s=>`<div class="stat"><div class="stat-n">${s.n}</div><div class="stat-l">${s.l}</div><span class="stat-i">${s.i}</span></div>`).join('');
-  document.getElementById('d-prods').innerHTML=prods.length?prods.slice(0,5).map(p=>{const ph=p.photos&&p.photos.length?p.photos[0].data:'';return`<tr><td><div class="pc"><div class="pt">${ph?`<img src="${ph}">`:(p.emoji||'🪷')}</div>${p.name}</div></td><td>${p.price||'A consultar'}</td><td><span class="tb">${p.tag||'—'}</span></td><td><button class="btn btn-g btn-sm" onclick="goTab('prods',null);editProd(${p.id})">✏️</button></td></tr>`;}).join(''):`<tr><td colspan="4" class="te">Nenhum produto.</td></tr>`;
-  document.getElementById('d-fbs').innerHTML=fbs.length?fbs.slice(0,4).map(f=>`<tr><td>${f.author}</td><td><span class="sd">${'★'.repeat(f.stars)}</span></td><td style="max-width:200px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">"${f.text.substring(0,50)}…"</td><td><button class="btn btn-d btn-sm" onclick="delFb(${f.id})">🗑</button></td></tr>`).join(''):`<tr><td colspan="4" class="te">Nenhum feedback.</td></tr>`;
+  document.getElementById('stats').innerHTML=[
+    {n:prods.length,l:'Produtos',i:'🛍'},{n:fbs.length,l:'Feedbacks',i:'💬'},
+    {n:avg,l:'Avaliação Média',i:'⭐'},{n:DATA.info&&DATA.info.whatsapp?'✓':'✗',l:'WhatsApp',i:'📱'}
+  ].map(s=>`<div class="stat"><div class="stat-n">${s.n}</div><div class="stat-l">${s.l}</div><span class="stat-i">${s.i}</span></div>`).join('');
+
+  document.getElementById('d-prods').innerHTML=prods.length
+    ?prods.slice(0,5).map(p=>{const ph=p.photos&&p.photos.length?p.photos[0].data:'';return`<tr><td><div class="pcell"><div class="pthumb">${ph?`<img src="${ph}">`:(p.emoji||'🪷')}</div>${p.name}</div></td><td>${p.price||'A consultar'}</td><td><span class="tbadge">${p.tag||'—'}</span></td><td><button class="btn btn-g btn-sm" onclick="goTab('prods',null);editProd(${p.id})">✏️</button></td></tr>`;}).join('')
+    :`<tr><td colspan="4" class="te">Nenhum produto.</td></tr>`;
+
+  document.getElementById('d-fbs').innerHTML=fbs.length
+    ?fbs.slice(0,4).map(f=>`<tr><td>${f.author}</td><td><span class="sd">${'★'.repeat(f.stars)}</span></td><td style="max-width:200px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">"${f.text.substring(0,50)}…"</td><td><button class="btn btn-d btn-sm" onclick="delFb(${f.id})">🗑</button></td></tr>`).join('')
+    :`<tr><td colspan="4" class="te">Nenhum feedback.</td></tr>`;
 }
 
 // ═══════════════════════════════════════════
 //  INFO
 // ═══════════════════════════════════════════
-async function loadInfo(){
-  const i=await DB.getInfo()||{};
+function loadInfoFields(){
+  const i=DATA.info||{};
   document.getElementById('a-name').value=i.siteName||'';
   document.getElementById('a-tag').value=i.tagline||'';
   document.getElementById('a-desc').value=i.desc||'';
@@ -497,44 +566,59 @@ async function loadInfo(){
   document.getElementById('a-em').value=i.email||'';
   document.getElementById('a-ig').value=i.instagram||'';
   document.getElementById('a-addr').value=i.address||'';
-  renderPCircle(i);
+  renderPCircle();
 }
-function renderPCircle(i){
+function renderPCircle(){
   const img=document.getElementById('pc-img'),ic=document.getElementById('pci'),rm=document.getElementById('logo-rm');
-  if(i&&i.logoData){img.src=i.logoData;img.style.display='block';ic.style.display='none';rm.style.display='inline-flex';}
+  if(DATA.info&&DATA.info.logoData){img.src=DATA.info.logoData;img.style.display='block';ic.style.display='none';rm.style.display='inline-flex';}
   else{img.style.display='none';ic.style.display='block';rm.style.display='none';}
 }
 function handleLogo(input){
   const f=input.files[0];if(!f)return;
-  compress(f,600,600,.85,async data=>{
-    const i=await DB.getInfo()||{};i.logoData=data;
-    renderPCircle(i);updSbLogo(i);
-    toast('Foto carregada! Clique em Salvar.','ok');
-  });input.value='';
+  compress(f,400,400,.8,data=>{
+    if(!DATA.info)DATA.info={};
+    DATA.info.logoData=data;
+    renderPCircle();updSbLogo();
+    toast('Foto carregada! Clique em Salvar Informações.','ok');
+  });
+  input.value='';
 }
-async function removeLogo(){
-  const i=await DB.getInfo()||{};i.logoData='';
-  renderPCircle(i);updSbLogo(i);
+function removeLogo(){
+  if(DATA.info)DATA.info.logoData='';
+  renderPCircle();updSbLogo();
 }
 async function saveInfo(){
-  const i=await DB.getInfo()||{};
-  i.siteName=document.getElementById('a-name').value||i.siteName;
-  i.tagline=document.getElementById('a-tag').value||i.tagline;
-  i.desc=document.getElementById('a-desc').value||i.desc;
-  i.whatsapp=document.getElementById('a-wa').value.replace(/\D/g,'');
-  i.email=document.getElementById('a-em').value;
-  i.instagram=document.getElementById('a-ig').value.replace('@','');
-  i.address=document.getElementById('a-addr').value;
-  await DB.setInfo(i);updSbLogo(i);await renderDash();
-  toast('Informações salvas!','ok');
+  if(!DATA.info)DATA.info={};
+  DATA.info.siteName=document.getElementById('a-name').value||DATA.info.siteName;
+  DATA.info.tagline=document.getElementById('a-tag').value||DATA.info.tagline;
+  DATA.info.desc=document.getElementById('a-desc').value||DATA.info.desc;
+  DATA.info.whatsapp=document.getElementById('a-wa').value.replace(/\D/g,'');
+  DATA.info.email=document.getElementById('a-em').value;
+  DATA.info.instagram=document.getElementById('a-ig').value.replace('@','');
+  DATA.info.address=document.getElementById('a-addr').value;
+  const ok=await GH.save(DATA);
+  if(ok){updSbLogo();renderDash();toast('Informações salvas! O site atualiza em instantes.','ok');}
+  else toast('Erro ao salvar. Tente novamente.','err');
 }
 
 // ═══════════════════════════════════════════
-//  IMAGE COMPRESSION
+//  COMPRESS
 // ═══════════════════════════════════════════
 function compress(file,mw,mh,q,cb){
   const r=new FileReader();
-  r.onload=e=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;if(w>mw){h=Math.round(h*mw/w);w=mw;}if(h>mh){w=Math.round(w*mh/h);h=mh;}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',q));};img.src=e.target.result;};
+  r.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      let w=img.width,h=img.height;
+      if(w>mw){h=Math.round(h*mw/w);w=mw;}
+      if(h>mh){w=Math.round(w*mh/h);h=mh;}
+      const c=document.createElement('canvas');
+      c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      cb(c.toDataURL('image/jpeg',q));
+    };
+    img.src=e.target.result;
+  };
   r.readAsDataURL(file);
 }
 
@@ -542,15 +626,27 @@ function compress(file,mw,mh,q,cb){
 //  PRODUCTS
 // ═══════════════════════════════════════════
 let tempPh=[];
-async function renderProds(){
-  const prods=await DB.getProds();
-  document.getElementById('p-tbody').innerHTML=prods.length?prods.map(p=>{const ph=p.photos&&p.photos.length?p.photos[0].data:'';return`<tr><td><div class="pc"><div class="pt">${ph?`<img src="${ph}">`:(p.emoji||'🪷')}</div>${p.name}</div></td><td>${p.price||'A consultar'}</td><td><span class="tb">${p.tag||'—'}</span></td><td style="text-align:right;white-space:nowrap"><button class="btn btn-g btn-sm" style="margin-right:.4rem" onclick="editProd(${p.id})">✏️ Editar</button><button class="btn btn-d btn-sm" onclick="delProd(${p.id})">🗑</button></td></tr>`;}).join(''):`<tr><td colspan="4" class="te">Nenhum produto.</td></tr>`;
+function renderProdsTable(){
+  const prods=DATA.products||[];
+  document.getElementById('p-tbody').innerHTML=prods.length
+    ?prods.map(p=>{const ph=p.photos&&p.photos.length?p.photos[0].data:'';return`<tr><td><div class="pcell"><div class="pthumb">${ph?`<img src="${ph}">`:(p.emoji||'🪷')}</div>${p.name}</div></td><td>${p.price||'A consultar'}</td><td><span class="tbadge">${p.tag||'—'}</span></td><td style="text-align:right;white-space:nowrap"><button class="btn btn-g btn-sm" style="margin-right:.4rem" onclick="editProd(${p.id})">✏️ Editar</button><button class="btn btn-d btn-sm" onclick="delProd(${p.id})">🗑</button></td></tr>`;}).join('')
+    :`<tr><td colspan="4" class="te">Nenhum produto.</td></tr>`;
 }
 function dzo(e){e.preventDefault();document.getElementById('pdz').classList.add('over');}
 function dzl(){document.getElementById('pdz').classList.remove('over');}
 function dzd(e){e.preventDefault();dzl();procImgs([...e.dataTransfer.files].filter(f=>f.type.startsWith('image/')));}
 function handleProdImgs(inp){procImgs([...inp.files]);inp.value='';}
-function procImgs(files){if(!files.length)return;let done=0;files.forEach(f=>{compress(f,900,900,.88,data=>{tempPh.push({data,primary:tempPh.length===0});done++;if(done===files.length)renderPhGrid();});});}
+function procImgs(files){
+  if(!files.length)return;
+  let done=0;
+  files.forEach(f=>{
+    compress(f,800,800,.85,data=>{
+      tempPh.push({data,primary:tempPh.length===0});
+      done++;
+      if(done===files.length)renderPhGrid();
+    });
+  });
+}
 function renderPhGrid(){
   const g=document.getElementById('ph-grid'),h=document.getElementById('ph-hint');
   g.innerHTML='';
@@ -565,28 +661,58 @@ function renderPhGrid(){
 }
 function rmPh(i){const wp=tempPh[i].primary;tempPh.splice(i,1);if(wp&&tempPh.length)tempPh[0].primary=true;renderPhGrid();}
 function setPri(i){tempPh.forEach((p,j)=>p.primary=j===i);renderPhGrid();}
+
 async function saveProd(){
   const nm=document.getElementById('p-name').value.trim();
   if(!nm){toast('Informe o nome!','err');return;}
   const id=document.getElementById('p-id').value;
   const sorted=[...tempPh].sort((a,b)=>b.primary-a.primary);
-  const data={name:nm,price:document.getElementById('p-price').value,desc:document.getElementById('p-desc').value,fullDesc:document.getElementById('p-fdesc').value,prazo:document.getElementById('p-prazo').value,custom:document.getElementById('p-cust').value,emoji:document.getElementById('p-emoji').value||'🪷',tag:document.getElementById('p-tag').value,photos:sorted};
-  if(id)data.id=parseInt(id); else data.id=Date.now();
-  await DB.putProd(data);await renderProds();await renderDash();clearProd();
-  toast(id?'Produto atualizado!':'Produto adicionado!','ok');
+  const prod={
+    name:nm,
+    price:document.getElementById('p-price').value,
+    desc:document.getElementById('p-desc').value,
+    fullDesc:document.getElementById('p-fdesc').value,
+    prazo:document.getElementById('p-prazo').value,
+    custom:document.getElementById('p-cust').value,
+    emoji:document.getElementById('p-emoji').value||'🪷',
+    tag:document.getElementById('p-tag').value,
+    photos:sorted
+  };
+  if(!DATA.products)DATA.products=[];
+  if(id){
+    prod.id=parseInt(id);
+    const idx=DATA.products.findIndex(x=>x.id===prod.id);
+    if(idx>-1)DATA.products[idx]=prod; else DATA.products.push(prod);
+  } else {
+    prod.id=Date.now();
+    DATA.products.push(prod);
+  }
+  const ok=await GH.save(DATA);
+  if(ok){renderProdsTable();renderDash();clearProd();toast(id?'Produto atualizado!':'Produto adicionado!','ok');}
+  else toast('Erro ao salvar. Tente novamente.','err');
 }
-async function editProd(id){
-  const prods=await DB.getProds();const p=prods.find(x=>x.id===id);if(!p)return;
+function editProd(id){
+  const p=(DATA.products||[]).find(x=>x.id===id);if(!p)return;
   document.getElementById('p-id').value=id;
-  ['name','price','desc','fdesc','prazo','cust','emoji','tag'].forEach(k=>{const el=document.getElementById('p-'+k);if(el)el.value=p[k==='fdesc'?'fullDesc':k==='cust'?'custom':k]||'';});
-  tempPh=(p.photos||[]).map(x=>({...x}));renderPhGrid();
+  document.getElementById('p-name').value=p.name||'';
+  document.getElementById('p-price').value=p.price||'';
+  document.getElementById('p-desc').value=p.desc||'';
+  document.getElementById('p-fdesc').value=p.fullDesc||'';
+  document.getElementById('p-prazo').value=p.prazo||'';
+  document.getElementById('p-cust').value=p.custom||'';
+  document.getElementById('p-emoji').value=p.emoji||'';
+  document.getElementById('p-tag').value=p.tag||'';
+  tempPh=(p.photos||[]).map(x=>({...x}));
+  renderPhGrid();
   document.getElementById('pform-title').textContent='✏️ Editando: '+p.name;
   document.getElementById('pform').scrollIntoView({behavior:'smooth',block:'start'});
 }
 async function delProd(id){
   if(!confirm('Excluir este produto?'))return;
-  await DB.delProd(id);await renderProds();await renderDash();
-  toast('Produto excluído.','ok');
+  DATA.products=(DATA.products||[]).filter(x=>x.id!==id);
+  const ok=await GH.save(DATA);
+  if(ok){renderProdsTable();renderDash();toast('Produto excluído.','ok');}
+  else toast('Erro ao excluir.','err');
 }
 function clearProd(){
   ['p-id','p-name','p-price','p-desc','p-fdesc','p-prazo','p-cust','p-emoji','p-tag'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
@@ -600,47 +726,38 @@ function clearProd(){
 // ═══════════════════════════════════════════
 let curSt=5;
 function setSt(n){curSt=n;document.querySelectorAll('.star-btn').forEach(b=>b.classList.toggle('on',parseInt(b.dataset.v)<=n));}
-async function renderFbs(){
-  const fbs=await DB.getFbs();
-  document.getElementById('fb-tbody').innerHTML=fbs.length?fbs.map(f=>`<tr><td>${f.author}</td><td><span class="sd">${'★'.repeat(f.stars)}${'☆'.repeat(5-f.stars)}</span></td><td style="max-width:200px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-style:italic">"${f.text.substring(0,55)}…"</td><td>${f.date||'—'}</td><td style="text-align:right"><button class="btn btn-d btn-sm" onclick="delFb(${f.id})">🗑</button></td></tr>`).join(''):`<tr><td colspan="5" class="te">Nenhum feedback.</td></tr>`;
+function renderFbsTable(){
+  const fbs=DATA.feedbacks||[];
+  document.getElementById('fb-tbody').innerHTML=fbs.length
+    ?fbs.map(f=>`<tr><td>${f.author}</td><td><span class="sd">${'★'.repeat(f.stars)}${'☆'.repeat(5-f.stars)}</span></td><td style="max-width:200px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-style:italic">"${f.text.substring(0,55)}…"</td><td>${f.date||'—'}</td><td style="text-align:right"><button class="btn btn-d btn-sm" onclick="delFb(${f.id})">🗑</button></td></tr>`).join('')
+    :`<tr><td colspan="5" class="te">Nenhum feedback.</td></tr>`;
 }
 async function saveFb(){
-  const text=document.getElementById('fb-text').value.trim(),author=document.getElementById('fb-author').value.trim();
+  const text=document.getElementById('fb-text').value.trim();
+  const author=document.getElementById('fb-author').value.trim();
   if(!text||!author){toast('Preencha o comentário e o nome!','err');return;}
+  if(!DATA.feedbacks)DATA.feedbacks=[];
   const id=document.getElementById('fb-id').value;
-  const data={stars:curSt,text,author,date:document.getElementById('fb-date').value};
-  if(id)data.id=parseInt(id); else data.id=Date.now();
-  await DB.putFb(data);await renderFbs();await renderDash();clearFb();
-  toast('Feedback publicado!','ok');
+  const fb={stars:curSt,text,author,date:document.getElementById('fb-date').value};
+  if(id){fb.id=parseInt(id);const idx=DATA.feedbacks.findIndex(x=>x.id===fb.id);if(idx>-1)DATA.feedbacks[idx]=fb;else DATA.feedbacks.push(fb);}
+  else{fb.id=Date.now();DATA.feedbacks.push(fb);}
+  const ok=await GH.save(DATA);
+  if(ok){renderFbsTable();renderDash();clearFb();toast('Feedback publicado!','ok');}
+  else toast('Erro ao salvar.','err');
 }
 async function delFb(id){
   if(!confirm('Excluir este feedback?'))return;
-  await DB.delFb(id);await renderFbs();await renderDash();
-  toast('Feedback excluído.','ok');
+  DATA.feedbacks=(DATA.feedbacks||[]).filter(x=>x.id!==id);
+  const ok=await GH.save(DATA);
+  if(ok){renderFbsTable();renderDash();toast('Feedback excluído.','ok');}
+  else toast('Erro ao excluir.','err');
 }
-function clearFb(){document.getElementById('fb-id').value='';document.getElementById('fb-text').value='';document.getElementById('fb-author').value='';document.getElementById('fb-date').value='';setSt(5);}
-
-// ═══════════════════════════════════════════
-//  BACKUP
-// ═══════════════════════════════════════════
-async function expBkp(){
-  const data=await DB.exportAll();
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download=`lotus_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);
-  toast('Backup exportado!','ok');
-}
-async function impBkp(inp){
-  const f=inp.files[0];if(!f)return;
-  const text=await f.text();
-  try{
-    const data=JSON.parse(text);
-    if(!confirm('Isso vai substituir todos os dados. Continuar?'))return;
-    await DB.importAll(data);
-    const info=await DB.getInfo()||{};updSbLogo(info);await renderDash();
-    toast('Backup restaurado!','ok');
-  }catch(e){toast('Arquivo inválido!','err');}
-  inp.value='';
+function clearFb(){
+  document.getElementById('fb-id').value='';
+  document.getElementById('fb-text').value='';
+  document.getElementById('fb-author').value='';
+  document.getElementById('fb-date').value='';
+  setSt(5);
 }
 
 // ═══════════════════════════════════════════
@@ -649,8 +766,10 @@ async function impBkp(inp){
 function toast(msg,type=''){
   const t=document.getElementById('toast');
   t.textContent=(type==='ok'?'✓ ':type==='err'?'✕ ':'✦ ')+msg;
-  t.className='toast'+(type?' '+type:'');t.classList.add('show');
-  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3000);
+  t.className='toast'+(type?' '+type:'');
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
 // ═══════════════════════════════════════════
