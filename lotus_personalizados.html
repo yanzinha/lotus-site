@@ -74,7 +74,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,7vw,5.5rem);fon
 .modal-main-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:opacity .3s}
 .modal-emoji{font-size:7rem;z-index:1;position:relative;filter:drop-shadow(0 0 24px var(--glow))}
 .modal-img-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,#0d0720 100%);z-index:2}
-.modal-gallery{display:none;flex;gap:.5rem;padding:.8rem 1.5rem 0;overflow-x:auto;scroll-behavior:smooth}
+.modal-gallery{display:none;gap:.5rem;padding:.8rem 1.5rem 0;overflow-x:auto;scroll-behavior:smooth}
 .modal-gallery::-webkit-scrollbar{height:3px}.modal-gallery::-webkit-scrollbar-thumb{background:rgba(180,140,220,.3);border-radius:50px}
 .gallery-thumb{width:56px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;border:2px solid transparent;cursor:pointer;transition:all .25s;opacity:.5}
 .gallery-thumb.active{border-color:var(--soft);opacity:1;box-shadow:0 0 12px var(--glow)}.gallery-thumb:hover{opacity:.8}
@@ -116,15 +116,20 @@ footer{padding:2.5rem 2rem;text-align:center;border-top:1px solid var(--border);
 footer span{color:var(--acc)}
 .pulse-line{display:block;width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--soft),var(--acc),transparent);opacity:.4;margin:0 auto;max-width:1100px}
 .fab{position:fixed;bottom:2rem;right:2rem;z-index:400;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#6b4fa0,#2d1b69);box-shadow:0 4px 28px rgba(107,79,160,.68);display:flex;align-items:center;justify-content:center;font-size:1.4rem;text-decoration:none;transition:transform .3s,box-shadow .3s;animation:fabp 2.5s ease-in-out infinite}
-.fab:hover{transform:scale(1.12);animation:none;box-shadow:0 8px 45px rgba(107,79,160,.88)}
+.fab:hover{transform:scale(1.12);animation:none}
 @keyframes fabp{0%,100%{box-shadow:0 4px 28px rgba(107,79,160,.68)}50%{box-shadow:0 4px 48px rgba(107,79,160,.9),0 0 0 8px rgba(107,79,160,.13)}}
 .fade-up{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
 .fade-up.visible{opacity:1;transform:translateY(0)}
+#loading{position:fixed;inset:0;z-index:9999;background:#07040f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:opacity .6s}
+#loading.hide{opacity:0;pointer-events:none}
+.spinner{width:44px;height:44px;border:2px solid rgba(180,140,220,.15);border-top-color:var(--soft);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:rgba(255,255,255,.02)}::-webkit-scrollbar-thumb{background:rgba(180,140,220,.22);border-radius:50px}
 @media(max-width:700px){nav{padding:1rem 1.4rem}.nav-links{display:none;position:fixed;top:60px;left:0;right:0;background:rgba(7,4,15,.97);flex-direction:column;padding:1.5rem 2rem;gap:1.2rem;border-bottom:1px solid var(--border);z-index:499}.nav-links.open{display:flex}.hamburger{display:flex}.modal-details{grid-template-columns:1fr}.cta-inner{padding:2.5rem 1.5rem}}
 </style>
 </head>
 <body>
+<div id="loading"><span style="font-size:3rem;animation:float 2s ease-in-out infinite">🪷</span><div class="spinner"></div></div>
 <div class="stars" id="stars"></div>
 <nav>
   <a href="#" class="nav-logo"><img class="nav-logo-img" id="nav-logo-img" src="" alt=""><span id="nav-logo-text">🪷 Lotus</span></a>
@@ -140,7 +145,7 @@ footer span{color:var(--acc)}
   <div class="lotus-ring" id="hero-ring"><span class="hero-icon" id="hero-icon">🪷</span></div>
   <h1 id="hero-name">Lotus Personalizados</h1>
   <p class="hero-sub" id="hero-tagline">Papelaria Personalizada · Feito à Mão com Amor</p>
-  <p class="hero-desc" id="hero-desc">Criamos peças únicas com carinho e dedicação. Cada detalhe é pensado especialmente para você.</p>
+  <p class="hero-desc" id="hero-desc">Criamos peças únicas com carinho e dedicação.</p>
   <div class="btn-group">
     <a href="#produtos" class="btn btn-primary">✨ Ver Produtos</a>
     <a href="#contato" class="btn btn-outline">💬 Encomendar</a>
@@ -167,9 +172,9 @@ footer span{color:var(--acc)}
     <h2 class="section-title fade-up">Como Funciona<br>Nosso Atendimento</h2>
     <div class="divider fade-up"></div>
     <div class="steps">
-      <div class="step fade-up"><div class="step-num">01</div><div class="step-title">Encomendas com Antecedência</div><p class="step-text">Para qualidade impecável, pedimos pelo menos <strong style="color:var(--soft)">3 semanas de antecedência</strong>. A pressa é inimiga da perfeição.</p></div>
-      <div class="step fade-up"><div class="step-num">02</div><div class="step-title">Dúvidas e Informações</div><p class="step-text">Nossa equipe está pronta no <strong style="color:var(--soft)">direct ou WhatsApp</strong> para alinhar todas as expectativas antes do pedido.</p></div>
-      <div class="step fade-up"><div class="step-num">03</div><div class="step-title">Valores e Pagamento</div><p class="step-text">Aceitamos <strong style="color:var(--soft)">Pix, Cartão e Dinheiro</strong>. Atendimento personalizado para cada cliente.</p><div class="payment-badges"><span class="badge">💸 Pix</span><span class="badge">💳 Cartão</span><span class="badge">💵 Dinheiro</span></div></div>
+      <div class="step fade-up"><div class="step-num">01</div><div class="step-title">Encomendas com Antecedência</div><p class="step-text">Para qualidade impecável, pedimos pelo menos <strong style="color:var(--soft)">3 semanas de antecedência</strong>.</p></div>
+      <div class="step fade-up"><div class="step-num">02</div><div class="step-title">Dúvidas e Informações</div><p class="step-text">Nossa equipe está pronta no <strong style="color:var(--soft)">direct ou WhatsApp</strong> para alinhar todas as expectativas.</p></div>
+      <div class="step fade-up"><div class="step-num">03</div><div class="step-title">Valores e Pagamento</div><p class="step-text">Aceitamos <strong style="color:var(--soft)">Pix, Cartão e Dinheiro</strong>.</p><div class="payment-badges"><span class="badge">💸 Pix</span><span class="badge">💳 Cartão</span><span class="badge">💵 Dinheiro</span></div></div>
     </div>
   </div>
 </section>
@@ -189,9 +194,7 @@ footer span{color:var(--acc)}
   <p>🪷 <span id="footer-name">Lotus Personalizados</span> · Papelaria Personalizada Feita à Mão com Amor ♡</p>
   <p style="margin-top:.4rem" id="footer-loc"></p>
 </footer>
-<a id="fab-wa" href="#" target="_blank" class="fab" title="WhatsApp">💬</a>
-
-<!-- MODAL -->
+<a id="fab-wa" href="#" target="_blank" class="fab">💬</a>
 <div class="modal-overlay" id="product-modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -210,73 +213,75 @@ footer span{color:var(--acc)}
     </div>
   </div>
 </div>
-
 <script>
 // ═══════════════════════════════════════════
-//  BANCO DE DADOS — IndexedDB
+//  GITHUB DATABASE
 // ═══════════════════════════════════════════
-const DB = (function(){
-  const NAME='lotus_db', VER=1;
-  let db=null;
-  function open(){
-    return new Promise((res,rej)=>{
-      if(db){res(db);return;}
-      const r=indexedDB.open(NAME,VER);
-      r.onupgradeneeded=e=>{
-        const d=e.target.result;
-        if(!d.objectStoreNames.contains('info')) d.createObjectStore('info',{keyPath:'k'});
-        if(!d.objectStoreNames.contains('products')) d.createObjectStore('products',{keyPath:'id'});
-        if(!d.objectStoreNames.contains('feedbacks')) d.createObjectStore('feedbacks',{keyPath:'id'});
-      };
-      r.onsuccess=e=>{db=e.target.result;res(db);};
-      r.onerror=e=>rej(e.target.error);
+const GH = {
+  token: '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',
+  owner: 'yanzinha',
+  repo:  'lotus-site',
+  file:  'lotus_data.json',
+
+  async load(){
+    try{
+      const r = await fetch(`https://api.github.com/repos/${this.owner}/${this.repo}/contents/${this.file}`,{
+        headers:{'Authorization':'token '+this.token,'Accept':'application/vnd.github.v3+json'}
+      });
+      if(r.status===404) return this.defaults();
+      const j = await r.json();
+      return JSON.parse(atob(j.content.replace(/\n/g,'')));
+    }catch(e){ return this.defaults(); }
+  },
+
+  async save(data){
+    // get current sha
+    let sha = null;
+    try{
+      const r = await fetch(`https://api.github.com/repos/${this.owner}/${this.repo}/contents/${this.file}`,{
+        headers:{'Authorization':'token '+this.token,'Accept':'application/vnd.github.v3+json'}
+      });
+      if(r.ok){ const j=await r.json(); sha=j.sha; }
+    }catch(e){}
+
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    const body = {message:'update data',content};
+    if(sha) body.sha = sha;
+
+    const r = await fetch(`https://api.github.com/repos/${this.owner}/${this.repo}/contents/${this.file}`,{
+      method:'PUT',
+      headers:{'Authorization':'token '+this.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body: JSON.stringify(body)
     });
+    return r.ok;
+  },
+
+  defaults(){
+    return {
+      info:{siteName:'Lotus Personalizados',tagline:'Papelaria Personalizada · Feito à Mão com Amor',desc:'Criamos peças únicas com carinho e dedicação. Cada detalhe é pensado especialmente para você.',whatsapp:'',email:'',instagram:'lotus_personalizados_',address:'Campos Belos, Goiás',logoData:''},
+      creds:{user:'admin',pass:'lotus2024'},
+      products:[
+        {id:1,name:'Buquê de Rosas Vermelhas',price:'A consultar',desc:'Rosas artesanais com chocolates e laço decorativo.',fullDesc:'Buquê feito à mão com rosas de papel crepom, acompanhado de bombons sortidos e laço de fita personalizado.',prazo:'3 semanas',custom:'Cores, tamanho e chocolates',emoji:'🌹',tag:'Sob Encomenda',photos:[],gradient:'rgba(180,30,60,.25),rgba(107,79,160,.3)'},
+        {id:2,name:'Buquê Azul com Borboletas',price:'A consultar',desc:'Rosas de cetim azul royal com borboletas douradas.',fullDesc:'Buquê de rosas de cetim azul royal adornadas com borboletas douradas.',prazo:'3 semanas',custom:'Cor das borboletas e fita',emoji:'💙',tag:'Personalizado',photos:[],gradient:'rgba(30,80,180,.3),rgba(107,79,160,.35)'},
+        {id:3,name:'Papelaria Personalizada',price:'A consultar',desc:'Cadernos, cartões e convites com seu estilo único.',fullDesc:'Papelaria artesanal feita à mão. Cada peça é única.',prazo:'2-3 semanas',custom:'Tema, cores e texto',emoji:'📝',tag:'Exclusivo',photos:[],gradient:'rgba(160,100,79,.2),rgba(45,27,105,.4)'}
+      ],
+      feedbacks:[
+        {id:1,stars:5,text:'Amei demais! Chegou no prazo e ficou ainda mais lindo do que eu esperava!',author:'Ana P.',date:'Maio 2026'},
+        {id:2,stars:5,text:'Atendimento super atencioso e o produto é uma obra de arte 💜',author:'Júlia M.',date:'Abril 2026'},
+        {id:3,stars:5,text:'Qualidade incrível! Recomendo de olhos fechados!',author:'Fernanda K.',date:'Março 2026'}
+      ]
+    };
   }
-  function p(req){return new Promise((res,rej)=>{req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);})}
-  function store(name,mode='readonly'){return db.transaction([name],mode).objectStore(name);}
-  async function getInfo(){await open();const r=await p(store('info').get('site_info'));return r?r.v:null;}
-  async function setInfo(v){await open();await p(store('info','readwrite').put({k:'site_info',v}));}
-  async function getCreds(){await open();const r=await p(store('info').get('creds'));return r?r.v:null;}
-  async function setCreds(v){await open();await p(store('info','readwrite').put({k:'creds',v}));}
-  async function getProducts(){await open();return p(store('products').getAll());}
-  async function putProduct(prod){await open();if(!prod.id)prod.id=Date.now();await p(store('products','readwrite').put(prod));return prod;}
-  async function delProduct(id){await open();await p(store('products','readwrite').delete(id));}
-  async function getFeedbacks(){await open();return p(store('feedbacks').getAll());}
-  async function putFeedback(fb){await open();if(!fb.id)fb.id=Date.now();await p(store('feedbacks','readwrite').put(fb));return fb;}
-  async function delFeedback(id){await open();await p(store('feedbacks','readwrite').delete(id));}
-  async function seed(){
-    await open();
-    const prods=await getProducts();
-    if(prods.length)return;
-    await setInfo({siteName:'Lotus Personalizados',tagline:'Papelaria Personalizada · Feito à Mão com Amor',desc:'Criamos peças únicas com carinho e dedicação. Cada detalhe é pensado especialmente para você.',whatsapp:'',email:'',instagram:'lotus_personalizados_',address:'Campos Belos, Goiás',logoData:''});
-    await setCreds({user:'admin',pass:'lotus2024'});
-    await putProduct({id:1,name:'Buquê de Rosas Vermelhas',price:'A consultar',desc:'Rosas artesanais com chocolates e laço decorativo.',fullDesc:'Buquê feito à mão com rosas de papel crepom, acompanhado de bombons sortidos e laço de fita personalizado. Disponível em diversas cores e tamanhos.',prazo:'3 semanas',custom:'Cores, tamanho e chocolates',emoji:'🌹',tag:'Sob Encomenda',photos:[],gradient:'rgba(180,30,60,.25),rgba(107,79,160,.3)'});
-    await putProduct({id:2,name:'Buquê Azul com Borboletas',price:'A consultar',desc:'Rosas de cetim azul royal com borboletas douradas.',fullDesc:'Buquê de rosas de cetim azul royal adornadas com borboletas douradas, embalado em papel especial e fita acetinada.',prazo:'3 semanas',custom:'Cor das borboletas e fita',emoji:'💙',tag:'Personalizado',photos:[],gradient:'rgba(30,80,180,.3),rgba(107,79,160,.35)'});
-    await putProduct({id:3,name:'Papelaria Personalizada',price:'A consultar',desc:'Cadernos, cartões e convites com seu estilo único.',fullDesc:'Cadernos, cartões de mensagem, convites e outros itens de papelaria feitos à mão. Cada peça é única.',prazo:'2-3 semanas',custom:'Tema, cores e texto',emoji:'📝',tag:'Exclusivo',photos:[],gradient:'rgba(160,100,79,.2),rgba(45,27,105,.4)'});
-    await putFeedback({id:1,stars:5,text:'Amei demais! Chegou no prazo e ficou ainda mais lindo do que eu esperava!',author:'Ana P.',date:'Maio 2026'});
-    await putFeedback({id:2,stars:5,text:'Atendimento super atencioso e o produto é uma obra de arte. Presenteei minha mãe e ela chorou 💜',author:'Júlia M.',date:'Abril 2026'});
-    await putFeedback({id:3,stars:5,text:'Qualidade incrível! Cada detalhe pensado com muito carinho. Recomendo de olhos fechados!',author:'Fernanda K.',date:'Março 2026'});
-  }
-  async function exportAll(){await open();const[info,creds,products,feedbacks]=await Promise.all([getInfo(),getCreds(),getProducts(),getFeedbacks()]);return{info,creds,products,feedbacks,at:new Date().toISOString()};}
-  async function importAll(data){
-    await open();
-    if(data.info)await setInfo(data.info);
-    if(data.creds)await setCreds(data.creds);
-    if(data.products){await p(store('products','readwrite').clear());for(const x of data.products)await putProduct(x);}
-    if(data.feedbacks){await p(store('feedbacks','readwrite').clear());for(const x of data.feedbacks)await putFeedback(x);}
-  }
-  return{open,seed,getInfo,setInfo,getCreds,setCreds,getProducts,putProduct,delProduct,getFeedbacks,putFeedback,delFeedback,exportAll,importAll};
-})();
+};
 
 // ═══════════════════════════════════════════
-//  SITE — render
+//  RENDER
 // ═══════════════════════════════════════════
 function toggleMenu(){document.getElementById('nav-links').classList.toggle('open');}
 function closeMobileMenu(){document.getElementById('nav-links').classList.remove('open');}
 
-async function renderSite(){
-  const [info,products,feedbacks]=await Promise.all([DB.getInfo(),DB.getProducts(),DB.getFeedbacks()]);
-  const i=info||{};
+function renderSite(data){
+  const i=data.info||{};
   document.getElementById('hero-name').textContent=i.siteName||'Lotus Personalizados';
   document.getElementById('hero-tagline').textContent=i.tagline||'';
   document.getElementById('hero-desc').textContent=i.desc||'';
@@ -306,10 +311,9 @@ async function renderSite(){
   document.getElementById('cta-ig').href=i.instagram?'https://instagram.com/'+i.instagram:'#';
   document.getElementById('cta-handle').textContent=i.instagram?'@'+i.instagram:'';
 
-  // products
   const grid=document.getElementById('products-grid');
   grid.innerHTML='';
-  products.forEach(p=>{
+  (data.products||[]).forEach(p=>{
     const card=document.createElement('div');
     card.className='product-card fade-up';
     card.onclick=()=>openModal(p,i);
@@ -324,13 +328,12 @@ async function renderSite(){
   plus.innerHTML=`<div style="font-size:3rem;margin-bottom:1rem;filter:drop-shadow(0 0 14px var(--glow))">✨</div><div class="card-title" style="margin-bottom:.5rem">Algo Especial?</div><p class="card-desc" style="margin-bottom:1.5rem">Criamos o que você imaginar.</p><a href="#contato" class="btn btn-outline" style="font-size:.7rem;padding:.62rem 1.5rem">Encomendar Agora</a>`;
   grid.appendChild(plus);
 
-  // feedbacks
   const fbGrid=document.getElementById('feedbacks-grid');
   fbGrid.innerHTML='';
-  if(!feedbacks.length){
+  if(!(data.feedbacks||[]).length){
     fbGrid.innerHTML='<div style="text-align:center;padding:3rem;color:rgba(255,255,255,.22);font-style:italic;grid-column:1/-1">Seja a primeira a deixar seu depoimento! ✨</div>';
   }else{
-    feedbacks.forEach(f=>{const c=document.createElement('div');c.className='feedback-card fade-up';c.innerHTML=`<div class="feedback-stars">${'★'.repeat(f.stars)}${'☆'.repeat(5-f.stars)}</div><p class="feedback-text">"${f.text}"</p><div><span class="feedback-author">— ${f.author}</span><span class="feedback-date">${f.date||''}</span></div>`;fbGrid.appendChild(c);});
+    (data.feedbacks||[]).forEach(f=>{const c=document.createElement('div');c.className='feedback-card fade-up';c.innerHTML=`<div class="feedback-stars">${'★'.repeat(f.stars)}${'☆'.repeat(5-f.stars)}</div><p class="feedback-text">"${f.text}"</p><div><span class="feedback-author">— ${f.author}</span><span class="feedback-date">${f.date||''}</span></div>`;fbGrid.appendChild(c);});
   }
   observeAll();
 }
@@ -363,12 +366,17 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 const obs=new IntersectionObserver(entries=>{entries.forEach(en=>{if(en.isIntersecting){const el=en.target,sibs=[...el.parentElement.querySelectorAll('.fade-up')];setTimeout(()=>el.classList.add('visible'),sibs.indexOf(el)*75);obs.unobserve(el);}});},{threshold:.1});
 function observeAll(){document.querySelectorAll('.fade-up:not(.visible)').forEach(el=>obs.observe(el));}
 
-// stars
 const se=document.getElementById('stars');
 for(let i=0;i<110;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.2+.5;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${Math.random()*4+2}s;--dl:${Math.random()*5}s;--b:${Math.random()*.45+.2}`;se.appendChild(s);}
 
-// boot
-(async()=>{await DB.seed();await renderSite();observeAll();})();
+(async()=>{
+  const data = await GH.load();
+  renderSite(data);
+  const pl=document.getElementById('loading');
+  pl.classList.add('hide');
+  setTimeout(()=>pl.style.display='none',600);
+  observeAll();
+})();
 </script>
 </body>
 </html>
