@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Administrativo — Lotus Personalizados</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --lilac:#F1E8F6; --lilac-soft:#F8F2FA; --purple:#6B3FA0; --purple-deep:#3A2050;
+    --gold:#C8A86B; --white:#fff; --cream:#FFFDFA; --text:#3A2050; --text-muted:#6E5C82;
+    --shadow-sm:0 8px 24px -10px rgba(107,63,160,0.22); --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Poppins',sans-serif;background:var(--lilac-soft);color:var(--text);}
+  h1,h2,h3,.font-display{font-family:'Playfair Display',serif;}
+  button{font-family:inherit;cursor:pointer;}
+  input,select,textarea{font-family:inherit;}
+
+  /* LOGIN */
+  #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 100% at 50% 0%, var(--lilac) 0%, var(--cream) 60%);}
+  .login-card{background:#fff;padding:44px 38px;border-radius:22px;box-shadow:var(--shadow-sm);width:100%;max-width:380px;text-align:center;}
+  .login-card svg{width:52px;height:52px;margin:0 auto 14px;}
+  .login-card h1{font-size:1.4rem;color:var(--purple-deep);margin:0 0 6px;}
+  .login-card p{color:var(--text-muted);font-size:0.88rem;margin:0 0 26px;}
+  .field{text-align:left;margin-bottom:16px;}
+  .field label{display:block;font-size:0.82rem;font-weight:500;color:var(--purple-deep);margin-bottom:6px;}
+  .field input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(107,63,160,0.25);background:var(--cream);font-size:0.92rem;}
+  .field input:focus{outline:none;border-color:var(--purple);}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:100px;font-weight:600;font-size:0.9rem;border:none;transition:.2s;}
+  .btn-primary{background:var(--purple);color:#fff;width:100%;}
+  .btn-primary:hover{background:#5c3390;}
+  .btn-sm{padding:8px 14px;font-size:0.8rem;border-radius:8px;}
+  .btn-ghost{background:var(--lilac);color:var(--purple-deep);}
+  .btn-danger{background:#fbe3e3;color:#b23a3a;}
+  .error-msg{color:#b23a3a;font-size:0.82rem;margin-top:12px;display:none;}
+
+  /* APP SHELL */
+  #app{display:none;min-height:100vh;}
+  .sidebar{width:230px;background:var(--purple-deep);color:#fff;padding:26px 18px;position:fixed;top:0;bottom:0;left:0;display:flex;flex-direction:column;}
+  .sidebar .brand{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;margin-bottom:34px;padding:0 6px;}
+  .sidebar .brand svg{width:26px;height:26px;flex-shrink:0;}
+  .sidebar nav{display:flex;flex-direction:column;gap:4px;flex:1;}
+  .sidebar nav button{background:none;border:none;color:rgba(255,255,255,0.7);text-align:left;padding:12px 14px;border-radius:10px;font-size:0.9rem;font-weight:500;transition:.2s;}
+  .sidebar nav button:hover{background:rgba(255,255,255,0.08);color:#fff;}
+  .sidebar nav button.active{background:var(--gold);color:var(--purple-deep);}
+  .sidebar .logout{background:rgba(255,255,255,0.08);color:#fff;border:none;padding:12px;border-radius:10px;font-size:0.85rem;}
+
+  main{margin-left:230px;padding:34px 40px;flex:1;width:calc(100% - 230px);}
+  .page{display:none;}
+  .page.active{display:block;}
+  .page-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;flex-wrap:wrap;gap:12px;}
+  .page-head h2{margin:0;color:var(--purple-deep);font-size:1.5rem;}
+
+  .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:24px;margin-bottom:20px;}
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);padding:10px 12px;border-bottom:1px solid rgba(107,63,160,0.12);}
+  td{padding:12px;border-bottom:1px solid rgba(107,63,160,0.08);font-size:0.9rem;vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  .thumb{width:42px;height:42px;border-radius:8px;object-fit:cover;background:var(--lilac);}
+  .row-actions{display:flex;gap:8px;}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:600;}
+  .badge.on{background:#e3f5e6;color:#2f8f4a;}
+  .badge.off{background:#f2e6ee;color:#a15b8e;}
+
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .form-grid .full{grid-column:1/-1;}
+  .field label{display:block;font-size:0.82rem;font-weight:500;color:var(--purple-deep);margin-bottom:6px;}
+  .field input,.field select,.field textarea{width:100%;padding:11px 13px;border-radius:10px;border:1px solid rgba(107,63,160,0.22);background:var(--cream);font-size:0.9rem;}
+  .field textarea{min-height:80px;resize:vertical;}
+  .stars-input{display:flex;gap:4px;}
+  .stars-input span{font-size:1.4rem;color:#ddd;cursor:pointer;}
+  .stars-input span.active{color:var(--gold);}
+  .form-actions{display:flex;gap:10px;margin-top:18px;}
+  .img-preview{width:80px;height:80px;border-radius:10px;object-fit:cover;background:var(--lilac);margin-bottom:10px;}
+  .toast{position:fixed;top:20px;right:20px;background:var(--purple-deep);color:#fff;padding:13px 20px;border-radius:12px;font-size:0.88rem;box-shadow:var(--shadow-sm);z-index:200;opacity:0;transform:translateY(-10px);transition:.3s;}
+  .toast.show{opacity:1;transform:none;}
+  .empty{text-align:center;color:var(--text-muted);padding:30px 0;font-size:0.9rem;}
+
+  @media (max-width:880px){
+    .sidebar{width:100%;position:relative;flex-direction:row;align-items:center;padding:14px 18px;}
+    .sidebar nav{flex-direction:row;overflow-x:auto;}
+    main{margin-left:0;width:100%;padding:24px 18px;}
+    .sidebar .logout{margin-left:auto;}
+    .form-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <svg viewBox="0 0 100 100" fill="none"><g fill="#6B3FA0"><path d="M50 50 C50 20 35 8 50 0 C65 8 50 20 50 50 Z"/><path d="M50 50 C22 45 10 28 0 38 C6 54 26 58 50 50 Z"/><path d="M50 50 C78 45 90 28 100 38 C94 54 74 58 50 50 Z"/><path fill="#C8A86B" d="M50 50 C30 68 26 88 12 88 C16 72 30 60 50 50 Z"/><path fill="#C8A86B" d="M50 50 C70 68 74 88 88 88 C84 72 70 60 50 50 Z"/></g></svg>
+    <h1>Painel Lotus</h1>
+    <p>Entre para gerenciar o site</p>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" required></div>
+      <div class="field"><label>Senha</label><input type="password" id="loginPassword" required></div>
+      <button class="btn btn-primary" type="submit">Entrar</button>
+      <p class="error-msg" id="loginError">Email ou senha incorretos.</p>
+    </form>
+  </div>
+</div>
+
+<div id="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 100 100" fill="none"><g fill="#fff"><path d="M50 50 C50 20 35 8 50 0 C65 8 50 20 50 50 Z"/><path d="M50 50 C22 45 10 28 0 38 C6 54 26 58 50 50 Z"/><path d="M50 50 C78 45 90 28 100 38 C94 54 74 58 50 50 Z"/></g></svg>
+      Lotus Admin
+    </div>
+    <nav>
+      <button data-page="produtos" class="active">Produtos</button>
+      <button data-page="categorias">Categorias</button>
+      <button data-page="depoimentos">Depoimentos</button>
+      <button data-page="faq">FAQ</button>
+      <button data-page="config">Configurações</button>
+    </nav>
+    <button class="logout" id="logoutBtn">Sair</button>
+  </aside>
+
+  <main>
+    <!-- PRODUTOS -->
+    <section class="page active" id="page-produtos">
+      <div class="page-head"><h2>Produtos</h2><button class="btn btn-primary btn-sm" onclick="openProductForm()">+ Novo produto</button></div>
+      <div class="card"><table id="tblProdutos"><thead><tr><th>Foto</th><th>Nome</th><th>Categoria</th><th>Status</th><th></th></tr></thead><tbody></tbody></table></div>
+      <div class="card" id="productFormCard" style="display:none;">
+        <h3 id="productFormTitle" class="font-display">Novo produto</h3>
+        <div class="form-grid">
+          <div class="field full"><label>Nome</label><input id="pName"></div>
+          <div class="field full"><label>Descrição</label><textarea id="pDesc"></textarea></div>
+          <div class="field"><label>Categoria</label><select id="pCategory"></select></div>
+          <div class="field"><label>Status</label><select id="pActive"><option value="true">Ativo</option><option value="false">Inativo</option></select></div>
+          <div class="field full">
+            <label>Foto</label>
+            <img id="pImgPreview" class="img-preview" style="display:none;">
+            <input type="file" id="pImgFile" accept="image/*">
+            <input type="hidden" id="pImgUrl">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary btn-sm" onclick="saveProduct()">Salvar</button>
+          <button class="btn btn-ghost btn-sm" onclick="closeProductForm()">Cancelar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORIAS -->
+    <section class="page" id="page-categorias">
+      <div class="page-head"><h2>Categorias</h2><button class="btn btn-primary btn-sm" onclick="openCategoryForm()">+ Nova categoria</button></div>
+      <div class="card"><table id="tblCategorias"><thead><tr><th>Nome</th><th>Slug</th><th></th></tr></thead><tbody></tbody></table></div>
+      <div class="card" id="categoryFormCard" style="display:none;">
+        <h3 class="font-display">Categoria</h3>
+        <div class="form-grid">
+          <div class="field"><label>Nome</label><input id="cName"></div>
+          <div class="field"><label>Slug (identificador)</label><input id="cSlug"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary btn-sm" onclick="saveCategory()">Salvar</button>
+          <button class="btn btn-ghost btn-sm" onclick="closeCategoryForm()">Cancelar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEPOIMENTOS -->
+    <section class="page" id="page-depoimentos">
+      <div class="page-head"><h2>Depoimentos</h2><button class="btn btn-primary btn-sm" onclick="openTestimonialForm()">+ Novo depoimento</button></div>
+      <div class="card"><table id="tblDepoimentos"><thead><tr><th>Nome</th><th>Comentário</th><th>Estrelas</th><th>Status</th><th></th></tr></thead><tbody></tbody></table></div>
+      <div class="card" id="testimonialFormCard" style="display:none;">
+        <h3 class="font-display">Depoimento</h3>
+        <div class="form-grid">
+          <div class="field"><label>Nome</label><input id="tName"></div>
+          <div class="field"><label>Estrelas</label>
+            <div class="stars-input" id="tStars">
+              <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
+            </div>
+          </div>
+          <div class="field full"><label>Comentário</label><textarea id="tComment"></textarea></div>
+          <div class="field"><label>Status</label><select id="tActive"><option value="true">Ativo</option><option value="false">Inativo</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary btn-sm" onclick="saveTestimonial()">Salvar</button>
+          <button class="btn btn-ghost btn-sm" onclick="closeTestimonialForm()">Cancelar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="page" id="page-faq">
+      <div class="page-head"><h2>Perguntas frequentes</h2><button class="btn btn-primary btn-sm" onclick="openFaqForm()">+ Nova pergunta</button></div>
+      <div class="card"><table id="tblFaq"><thead><tr><th>Pergunta</th><th>Status</th><th></th></tr></thead><tbody></tbody></table></div>
+      <div class="card" id="faqFormCard" style="display:none;">
+        <h3 class="font-display">Pergunta</h3>
+        <div class="form-grid">
+          <div class="field full"><label>Pergunta</label><input id="fQuestion"></div>
+          <div class="field full"><label>Resposta</label><textarea id="fAnswer"></textarea></div>
+          <div class="field"><label>Status</label><select id="fActive"><option value="true">Ativo</option><option value="false">Inativo</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary btn-sm" onclick="saveFaq()">Salvar</button>
+          <button class="btn btn-ghost btn-sm" onclick="closeFaqForm()">Cancelar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIGURAÇÕES -->
+    <section class="page" id="page-config">
+      <div class="page-head"><h2>Configurações</h2></div>
+      <div class="card">
+        <div class="form-grid">
+          <div class="field full">
+            <label>Logo da empresa</label>
+            <img id="setLogoPreview" class="img-preview" style="display:none;">
+            <input type="file" id="setLogoFile" accept="image/*">
+            <input type="hidden" id="setLogoUrl">
+          </div>
+          <div class="field"><label>Número de WhatsApp (só números, com DDI+DDD, ex: 5562999999999)</label><input id="setWhatsapp"></div>
+          <div class="field"><label>Instagram (sem @)</label><input id="setInstagram"></div>
+          <div class="field full"><label>Título do banner (hero)</label><input id="setHeroTitle"></div>
+          <div class="field full"><label>Subtítulo do banner</label><input id="setHeroSubtitle"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary btn-sm" onclick="saveSettings()">Salvar configurações</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://gchaerzotkzhlpldpjvu.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjaGFlcnpvdGt6aGxwbGRwanZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MTg1MzMsImV4cCI6MjA5OTE5NDUzM30.qPbHC0uY49F049hBvbgswOtYW2n7xaiILOWqoDEvgRI';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+/* ---------- AUTH ---------- */
+async function checkSession(){
+  const { data: { session } } = await sb.auth.getSession();
+  if (session){ showApp(); } else { showLogin(); }
+}
+function showLogin(){ document.getElementById('loginScreen').style.display='flex'; document.getElementById('app').style.display='none'; }
+function showApp(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  loadAll();
+}
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error){ document.getElementById('loginError').style.display='block'; }
+  else { document.getElementById('loginError').style.display='none'; showApp(); }
+});
+document.getElementById('logoutBtn').addEventListener('click', async () => { await sb.auth.signOut(); showLogin(); });
+checkSession();
+
+/* ---------- NAV ---------- */
+document.querySelectorAll('.sidebar nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+btn.dataset.page).classList.add('active');
+  });
+});
+
+function loadAll(){
+  loadCategories(); loadProducts(); loadTestimonials(); loadFaqs(); loadSettings();
+}
+
+/* ================= CATEGORIAS ================= */
+let categoriesCache = [];
+let editingCategoryId = null;
+async function loadCategories(){
+  const { data, error } = await sb.from('categories').select('*').order('sort_order');
+  if (error) return toast('Erro ao carregar categorias');
+  categoriesCache = data || [];
+  const tbody = document.querySelector('#tblCategorias tbody');
+  tbody.innerHTML = categoriesCache.map(c => `
+    <tr>
+      <td>${c.name}</td>
+      <td>${c.slug}</td>
+      <td class="row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editCategory('${c.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCategory('${c.id}')">Excluir</button>
+      </td>
+    </tr>`).join('') || '';
+  if (!categoriesCache.length) tbody.innerHTML = `<tr><td colspan="3" class="empty">Nenhuma categoria ainda.</td></tr>`;
+  const sel = document.getElementById('pCategory');
+  sel.innerHTML = categoriesCache.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+}
+function openCategoryForm(){ editingCategoryId = null; document.getElementById('cName').value=''; document.getElementById('cSlug').value=''; document.getElementById('categoryFormCard').style.display='block'; }
+function closeCategoryForm(){ document.getElementById('categoryFormCard').style.display='none'; }
+function editCategory(id){
+  const c = categoriesCache.find(x=>x.id===id); if(!c) return;
+  editingCategoryId = id;
+  document.getElementById('cName').value = c.name;
+  document.getElementById('cSlug').value = c.slug;
+  document.getElementById('categoryFormCard').style.display='block';
+}
+async function saveCategory(){
+  const name = document.getElementById('cName').value.trim();
+  const slug = document.getElementById('cSlug').value.trim();
+  if(!name || !slug) return toast('Preencha nome e slug');
+  const payload = { name, slug };
+  const { error } = editingCategoryId
+    ? await sb.from('categories').update(payload).eq('id', editingCategoryId)
+    : await sb.from('categories').insert(payload);
+  if (error) return toast('Erro: ' + error.message);
+  toast('Categoria salva!'); closeCategoryForm(); loadCategories();
+}
+async function deleteCategory(id){
+  if(!confirm('Excluir esta categoria?')) return;
+  const { error } = await sb.from('categories').delete().eq('id', id);
+  if (error) return toast('Erro: ' + error.message);
+  toast('Categoria excluída'); loadCategories();
+}
+
+/* ================= PRODUTOS ================= */
+let productsCache = [];
+let editingProductId = null;
+async function loadProducts(){
+  const { data, error } = await sb.from('products').select('*, categories(name)').order('sort_order');
+  if (error) return toast('Erro ao carregar produtos');
+  productsCache = data || [];
+  const tbody = document.querySelector('#tblProdutos tbody');
+  tbody.innerHTML = productsCache.map(p => `
+    <tr>
+      <td><img class="thumb" src="${p.image_url || ''}" onerror="this.style.visibility='hidden'"></td>
+      <td>${p.name}</td>
+      <td>${p.categories ? p.categories.name : '-'}</td>
+      <td><span class="badge ${p.active?'on':'off'}">${p.active?'Ativo':'Inativo'}</span></td>
+      <td class="row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editProduct('${p.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">Excluir</button>
+      </td>
+    </tr>`).join('') || '';
+  if (!productsCache.length) tbody.innerHTML = `<tr><td colspan="5" class="empty">Nenhum produto ainda.</td></tr>`;
+}
+function openProductForm(){
+  editingProductId = null;
+  document.getElementById('productFormTitle').textContent = 'Novo produto';
+  document.getElementById('pName').value=''; document.getElementById('pDesc').value='';
+  document.getElementById('pImgUrl').value=''; document.getElementById('pImgFile').value='';
+  document.getElementById('pImgPreview').style.display='none';
+  document.getElementById('pActive').value='true';
+  document.getElementById('productFormCard').style.display='block';
+}
+function closeProductForm(){ document.getElementById('productFormCard').style.display='none'; }
+function editProduct(id){
+  const p = productsCache.find(x=>x.id===id); if(!p) return;
+  editingProductId = id;
+  document.getElementById('productFormTitle').textContent = 'Editar produto';
+  document.getElementById('pName').value = p.name;
+  document.getElementById('pDesc').value = p.description || '';
+  document.getElementById('pCategory').value = p.category_id || '';
+  document.getElementById('pActive').value = String(p.active);
+  document.getElementById('pImgUrl').value = p.image_url || '';
+  if (p.image_url){ document.getElementById('pImgPreview').src = p.image_url; document.getElementById('pImgPreview').style.display='block'; }
+  else { document.getElementById('pImgPreview').style.display='none'; }
+  document.getElementById('productFormCard').style.display='block';
+}
+document.getElementById('pImgFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0]; if(!file) return;
+  toast('Enviando imagem...');
+  const path = `products/${Date.now()}_${file.name.replace(/\s+/g,'_')}`;
+  const { error } = await sb.storage.from('lotus-images').upload(path, file, { upsert: true });
+  if (error) return toast('Erro no upload: ' + error.message);
+  const { data } = sb.storage.from('lotus-images').getPublicUrl(path);
+  document.getElementById('pImgUrl').value = data.publicUrl;
+  document.getElementById('pImgPreview').src = data.publicUrl;
+  document.getElementById('pImgPreview').style.display='block';
+  toast('Imagem enviada!');
+});
+async function saveProduct(){
+  const name = document.getElementById('pName').value.trim();
+  if(!name) return toast('Informe o nome do produto');
+  const payload = {
+    name,
+    description: document.getElementById('pDesc').value.trim(),
+    category_id: document.getElementById('pCategory').value || null,
+    active: document.getElementById('pActive').value === 'true',
+    image_url: document.getElementById('pImgUrl').value || null
+  };
+  const { error } = editingProductId
+    ? await sb.from('products').update(payload).eq('id', editingProductId)
+    : await sb.from('products').insert(payload);
+  if (error) return toast('Erro: ' + error.message);
+  toast('Produto salvo!'); closeProductForm(); loadProducts();
+}
+async function deleteProduct(id){
+  if(!confirm('Excluir este produto?')) return;
+  const { error } = await sb.from('products').delete().eq('id', id);
+  if (error) return toast('Erro: ' + error.message);
+  toast('Produto excluído'); loadProducts();
+}
+
+/* ================= DEPOIMENTOS ================= */
+let testimonialsCache = [];
+let editingTestimonialId = null;
+let currentStars = 5;
+document.querySelectorAll('#tStars span').forEach(s => {
+  s.addEventListener('click', () => { currentStars = parseInt(s.dataset.v); paintStars(); });
+});
+function paintStars(){
+  document.querySelectorAll('#tStars span').forEach(s => s.classList.toggle('active', parseInt(s.dataset.v) <= currentStars));
+}
+async function loadTestimonials(){
+  const { data, error } = await sb.from('testimonials').select('*').order('sort_order');
+  if (error) return toast('Erro ao carregar depoimentos');
+  testimonialsCache = data || [];
+  const tbody = document.querySelector('#tblDepoimentos tbody');
+  tbody.innerHTML = testimonialsCache.map(t => `
+    <tr>
+      <td>${t.name}</td>
+      <td>${(t.comment||'').slice(0,60)}${t.comment && t.comment.length>60?'…':''}</td>
+      <td>${'★'.repeat(t.stars)}${'☆'.repeat(5-t.stars)}</td>
+      <td><span class="badge ${t.active?'on':'off'}">${t.active?'Ativo':'Inativo'}</span></td>
+      <td class="row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editTestimonial('${t.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteTestimonial('${t.id}')">Excluir</button>
+      </td>
+    </tr>`).join('') || '';
+  if (!testimonialsCache.length) tbody.innerHTML = `<tr><td colspan="5" class="empty">Nenhum depoimento ainda.</td></tr>`;
+}
+function openTestimonialForm(){
+  editingTestimonialId = null; currentStars = 5; paintStars();
+  document.getElementById('tName').value=''; document.getElementById('tComment').value='';
+  document.getElementById('tActive').value='true';
+  document.getElementById('testimonialFormCard').style.display='block';
+}
+function closeTestimonialForm(){ document.getElementById('testimonialFormCard').style.display='none'; }
+function editTestimonial(id){
+  const t = testimonialsCache.find(x=>x.id===id); if(!t) return;
+  editingTestimonialId = id; currentStars = t.stars; paintStars();
+  document.getElementById('tName').value = t.name;
+  document.getElementById('tComment').value = t.comment;
+  document.getElementById('tActive').value = String(t.active);
+  document.getElementById('testimonialFormCard').style.display='block';
+}
+async function saveTestimonial(){
+  const name = document.getElementById('tName').value.trim();
+  const comment = document.getElementById('tComment').value.trim();
+  if(!name || !comment) return toast('Preencha nome e comentário');
+  const payload = { name, comment, stars: currentStars, active: document.getElementById('tActive').value === 'true' };
+  const { error } = editingTestimonialId
+    ? await sb.from('testimonials').update(payload).eq('id', editingTestimonialId)
+    : await sb.from('testimonials').insert(payload);
+  if (error) return toast('Erro: ' + error.message);
+  toast('Depoimento salvo!'); closeTestimonialForm(); loadTestimonials();
+}
+async function deleteTestimonial(id){
+  if(!confirm('Excluir este depoimento?')) return;
+  const { error } = await sb.from('testimonials').delete().eq('id', id);
+  if (error) return toast('Erro: ' + error.message);
+  toast('Depoimento excluído'); loadTestimonials();
+}
+
+/* ================= FAQ ================= */
+let faqsCache = [];
+let editingFaqId = null;
+async function loadFaqs(){
+  const { data, error } = await sb.from('faqs').select('*').order('sort_order');
+  if (error) return toast('Erro ao carregar FAQ');
+  faqsCache = data || [];
+  const tbody = document.querySelector('#tblFaq tbody');
+  tbody.innerHTML = faqsCache.map(f => `
+    <tr>
+      <td>${f.question}</td>
+      <td><span class="badge ${f.active?'on':'off'}">${f.active?'Ativo':'Inativo'}</span></td>
+      <td class="row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editFaq('${f.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteFaq('${f.id}')">Excluir</button>
+      </td>
+    </tr>`).join('') || '';
+  if (!faqsCache.length) tbody.innerHTML = `<tr><td colspan="3" class="empty">Nenhuma pergunta ainda.</td></tr>`;
+}
+function openFaqForm(){
+  editingFaqId = null;
+  document.getElementById('fQuestion').value=''; document.getElementById('fAnswer').value='';
+  document.getElementById('fActive').value='true';
+  document.getElementById('faqFormCard').style.display='block';
+}
+function closeFaqForm(){ document.getElementById('faqFormCard').style.display='none'; }
+function editFaq(id){
+  const f = faqsCache.find(x=>x.id===id); if(!f) return;
+  editingFaqId = id;
+  document.getElementById('fQuestion').value = f.question;
+  document.getElementById('fAnswer').value = f.answer;
+  document.getElementById('fActive').value = String(f.active);
+  document.getElementById('faqFormCard').style.display='block';
+}
+async function saveFaq(){
+  const question = document.getElementById('fQuestion').value.trim();
+  const answer = document.getElementById('fAnswer').value.trim();
+  if(!question || !answer) return toast('Preencha pergunta e resposta');
+  const payload = { question, answer, active: document.getElementById('fActive').value === 'true' };
+  const { error } = editingFaqId
+    ? await sb.from('faqs').update(payload).eq('id', editingFaqId)
+    : await sb.from('faqs').insert(payload);
+  if (error) return toast('Erro: ' + error.message);
+  toast('Pergunta salva!'); closeFaqForm(); loadFaqs();
+}
+async function deleteFaq(id){
+  if(!confirm('Excluir esta pergunta?')) return;
+  const { error } = await sb.from('faqs').delete().eq('id', id);
+  if (error) return toast('Erro: ' + error.message);
+  toast('Pergunta excluída'); loadFaqs();
+}
+
+/* ================= CONFIGURAÇÕES ================= */
+document.getElementById('setLogoFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0]; if(!file) return;
+  toast('Enviando logo...');
+  const path = `logo/${Date.now()}_${file.name.replace(/\s+/g,'_')}`;
+  const { error } = await sb.storage.from('lotus-images').upload(path, file, { upsert: true });
+  if (error) return toast('Erro no upload: ' + error.message);
+  const { data } = sb.storage.from('lotus-images').getPublicUrl(path);
+  document.getElementById('setLogoUrl').value = data.publicUrl;
+  document.getElementById('setLogoPreview').src = data.publicUrl;
+  document.getElementById('setLogoPreview').style.display = 'block';
+  toast('Logo enviada! Clique em Salvar configurações.');
+});
+async function loadSettings(){
+  const { data, error } = await sb.from('settings').select('*');
+  if (error) return toast('Erro ao carregar configurações');
+  const map = {}; (data||[]).forEach(s => map[s.key] = s.value);
+  document.getElementById('setWhatsapp').value = map.whatsapp_number || '';
+  document.getElementById('setInstagram').value = map.instagram_handle || '';
+  document.getElementById('setHeroTitle').value = map.hero_title || '';
+  document.getElementById('setHeroSubtitle').value = map.hero_subtitle || '';
+  document.getElementById('setLogoUrl').value = map.logo_url || '';
+  if (map.logo_url){ document.getElementById('setLogoPreview').src = map.logo_url; document.getElementById('setLogoPreview').style.display = 'block'; }
+}
+async function saveSettings(){
+  const rows = [
+    { key: 'whatsapp_number', value: document.getElementById('setWhatsapp').value.trim() },
+    { key: 'instagram_handle', value: document.getElementById('setInstagram').value.trim() },
+    { key: 'hero_title', value: document.getElementById('setHeroTitle').value.trim() },
+    { key: 'hero_subtitle', value: document.getElementById('setHeroSubtitle').value.trim() },
+    { key: 'logo_url', value: document.getElementById('setLogoUrl').value.trim() },
+  ];
+  const { error } = await sb.from('settings').upsert(rows);
+  if (error) return toast('Erro: ' + error.message);
+  toast('Configurações salvas!');
+}
+</script>
+</body>
+</html>
